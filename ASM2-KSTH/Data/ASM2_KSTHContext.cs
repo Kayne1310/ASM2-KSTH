@@ -15,5 +15,6 @@ namespace ASM2_KSTH.Data
         }
 
         public DbSet<ASM2_KSTH.Models.Test> Test { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Diemdanh> Diemdanh { get; set; } = default!;
     }
 }
