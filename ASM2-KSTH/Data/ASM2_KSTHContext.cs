@@ -15,5 +15,8 @@ namespace ASM2_KSTH.Data
         }
 
         public DbSet<ASM2_KSTH.Models.Test> Test { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Login_Student> Lstudent { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Login_Admin> Ladmin { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Login_Teacher> Lteacher { get; set; } = default!;
     }
 }
