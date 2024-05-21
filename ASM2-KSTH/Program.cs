@@ -1,3 +1,6 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ASM2_KSTH.Data;
 namespace ASM2_KSTH
 {
     public class Program
@@ -5,6 +8,8 @@ namespace ASM2_KSTH
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<ASM2_KSTHContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ASM2_KSTHContext") ?? throw new InvalidOperationException("Connection string 'ASM2_KSTHContext' not found.")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
