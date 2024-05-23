@@ -14,10 +14,11 @@ namespace ASM2_KSTH.Data
         {
         }
 
-        public DbSet<ASM2_KSTH.Models.Test> Test { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Student> Lstudent { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Admin> Ladmin { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Teacher> Lteacher { get; set; } = default!;
+
         public DbSet<Major> Majors { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<Enrollments> Enrollments { get; set; }
@@ -27,7 +28,7 @@ namespace ASM2_KSTH.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-T5I26HK;Initial Catalog=KSTH;Integrated Security=True;Trust Server Certificate=True");
+            optionsBuilder.UseSqlServer("Data Source=YUNO\\SQLEXPRESS;Initial Catalog=KSTH;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +74,7 @@ namespace ASM2_KSTH.Data
                   .OnDelete(DeleteBehavior.NoAction);
 
         }
+
     }
     
 }
