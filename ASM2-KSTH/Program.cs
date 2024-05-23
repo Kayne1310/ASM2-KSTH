@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ASM2_KSTH.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 namespace ASM2_KSTH
 {
     public class Program
@@ -13,6 +14,13 @@ namespace ASM2_KSTH
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Students/Index";
+                options.LoginPath = "/Teachers/Index";
+                options.LoginPath = "/Admins/Index";
+                options.AccessDeniedPath = "/";
+            });
 
             var app = builder.Build();
 
@@ -29,11 +37,12 @@ namespace ASM2_KSTH
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Students}/{action=Index}/{id?}");
 
             app.Run();
         }
