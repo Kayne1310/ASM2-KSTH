@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ASM2_KSTH.ViewModels.StudentViewModel>
+
+@{
+    ViewData["Title"] = "ListStudents";
+}
+
+<h1>ListStudents</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Major</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+{
+            <tr>
+                <td>@student.Name</td>
+                <td>@student.DateOfBirth.ToShortDateString()</td>
+                <td>@student.Address</td>
+                <td>@student.PhoneNumber</td>
+                <td>@student.Email</td>
+                <td>@student.MajorName</td>
+            
+        
+   
+           
+            
+            <td>
+                <a asp-action="Edit" asp-route-id="@student.StudentId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@student.StudentId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@student.StudentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

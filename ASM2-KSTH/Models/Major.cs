@@ -1,11 +1,15 @@
-﻿namespace ASM2_KSTH.Models
-{
-    public class Major
-    {
-        public int MajorId { get; set; } // Primary Key
-        public string? MajorName { get; set; }
+﻿using System;
+using System.Collections.Generic;
 
-        public ICollection<Student>? Students { get; set; }
-        public ICollection<Course>? Courses { get; set; }
-    }
+namespace ASM2_KSTH.Models;
+
+public partial class Major
+{
+    public int MajorId { get; set; }
+
+    public string? MajorName { get; set; }
+
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }

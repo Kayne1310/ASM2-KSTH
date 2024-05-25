@@ -1,10 +1,13 @@
-﻿namespace ASM2_KSTH.Models
-{
-    public class Room
-    {
-        public int RoomId { get; set; } // Primary Key
-        public string? RoomNumber { get; set; }
+﻿using System;
+using System.Collections.Generic;
 
-        public ICollection<Class>? Classes { get; set; }
-    }
+namespace ASM2_KSTH.Models;
+
+public partial class Room
+{
+    public int RoomId { get; set; }
+
+    public string? RoomNumber { get; set; }
+
+    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
 }

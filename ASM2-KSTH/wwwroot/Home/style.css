@@ -1,0 +1,301 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* css */
+
+body{
+  
+    max-width: 1408px;
+    margin: 0 auto;
+    font-family:"Josefin Sans", sans-serif;
+    
+    line-height: inherit;
+
+    
+    
+}
+header{
+    max-width: 1408;
+    display: flex;
+    margin: 0 auto;
+    box-sizing: border-box;
+    height: 100px;
+    margin-bottom: 20px;
+    
+   
+}
+.logo img{
+    display: inline;
+    width: 100px;
+    height: 100px;
+    object-fit:cover;
+    margin-right: 100px;
+    box-sizing: border-box;
+    
+}
+
+
+
+nav#home ul  p {
+text-decoration: none;
+color: rgb(48, 62, 85);
+font-size: 40px;
+font-weight: 500;
+font-family: "Josefin Sans", sans-serif;
+margin-top: -20px;
+margin-left: 120px;
+
+}
+
+
+
+#home ul {
+    padding-top: 50px;
+    display: inline-block;
+}
+
+.menu  {
+ 
+    width: 1208px;
+    
+}
+.menu {
+   display: inline;
+   margin-left: 190px;
+  font-size: 20px;
+}
+.menu a{
+  text-decoration: none;
+}
+.menu .Login{
+  margin-right: 22px;
+ 
+}
+.menu img{
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+
+}
+.giay__img{
+    padding: 20px;
+    background-image: url("image2/top-100-truong-dai-hoc-quoc-gia-my.jpg") ;
+    width: 1408px;
+    height: 750px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    background-size: cover;
+    
+}
+
+section img{
+    width: 15px;
+    height: 18px;
+    margin-top: 10px;
+}
+
+#contact {
+    margin-top: 20px;
+    display: flex;
+    align-items: center; /* Canh giữa các phần tử con theo chiều dọc */
+    height: 32px; /* Đặt chiều cao của section là 32px */
+  
+
+  }
+  
+  #contact .address ul {
+    display: flex;
+    font-family: "Josefin Sans", sans-serif;
+  }
+  #contact .address ul li{
+    margin-right: 20px;
+    padding-bottom: 10px;
+
+  }
+  .address li img{
+    margin-bottom:-2px;
+  }
+ 
+  #contact .flex {
+    display: flex; /* Biến .flex thành container flex */
+    margin-left: auto; /* Đẩy phần tử .flex về bên phải của section */
+    box-sizing: border-box;
+  }
+  
+  #contact .items {
+    display: flex; /* Container flex cho các phần tử trong .items */
+    list-style: none;
+   margin-top: 10px;
+    padding: 0;
+
+  }
+  
+  #contact .items :not(:last-child)  {
+    margin-right: 10px; /* Khoảng cách giữa các phần tử trong .items */
+  }
+  .flex button{
+    width: 150px;
+    height: 30px;
+    border-radius: 100px;
+    background-color: blue;
+    color: #fff;
+    font-family: "Josefin Sans", sans-serif;
+    box-sizing: border-box;
+    margin-top: 15px;
+    font-size: 16px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  .flex button:hover{
+   background: #1959deb0;
+   cursor: pointer;
+  }
+.items img{
+    width: 20px;
+    height: 20px;
+}
+.container h2{
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 36px;
+  margin: 150px 0 30px 0;
+}
+#service{
+    display: flex;
+}
+#service button{
+  background: none;
+   border-radius: 8px;
+    padding: 8px 24px;
+    border: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Josefin Sans", sans-serif;
+              }
+button#tatca{
+    background: rgb(0, 45, 209);
+    color: #fff;
+}
+#service{
+ background-color: #fff;
+}
+#service button:not(button#tatca):hover{
+  background: rgb(0, 45, 209);
+    color: #fff;
+}
+.gird-img{
+ 
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr ;
+  grid-template-rows:355px 355px  ;
+  margin-top: 20px;
+  width: 1408px;
+ 
+  
+}
+.itemsgird{
+  margin-right: 40px;
+  margin-bottom: 40px;
+  box-sizing: border-box;
+  ;
+
+
+  
+}
+.itemsgird img {
+  width: 328px;
+  height: 220px;
+  object-fit: cover;
+}
+
+.itemsgird:hover{
+  box-shadow:0px 6px 15px 0px #002dd142;
+  cursor: pointer;
+  
+}
+.itemsgird p {
+  margin-top: 10px;
+  margin-left: 10px;
+  font-weight: 500;
+  font-size: 28px;
+}
+p.price-title{
+  text-transform: uppercase;
+  font-size: 10px
+
+
+}
+.price{
+
+  display: flex;
+  margin-top: 10px;
+  font-size: 15px;
+
+}
+.price .price-icon-img{
+  width: 24px;
+  height: 24px;
+  margin-top: -5px;
+
+}
+.boxleft{
+  margin-right: 50px;
+  margin-left:10px;
+}
+.boxright span {
+ font-size: 20px;
+ margin-right: 5px;
+ 
+}
+.boxright{
+  display: flex;
+  
+}
+
