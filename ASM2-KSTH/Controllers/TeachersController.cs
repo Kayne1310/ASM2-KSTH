@@ -37,7 +37,7 @@ namespace ASM2_KSTH.Controllers
             if (ModelState.IsValid)
             {
                 // Thực hiện xác thực thông tin đăng nhập tại đây
-                var user = await _context.Lteacher.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password);
+                var user = await _context.Teachers.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password);
 
                 if (user != null)
                 {

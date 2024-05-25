@@ -1,16 +1,23 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ASM2_KSTH.Models
+namespace ASM2_KSTH.Models;
+
+public partial class Course
 {
-    public class Course
-    {
-        public int CourseId { get; set; } // Primary Key
-        public string? CourseName { get; set; }
-        public string? CourseDescription { get; set; }
-        public int Credits { get; set; }
-        public int MajorId { get; set; } // Foreign Key
+    public int CourseId { get; set; }
 
-        public Major ?Major { get; set; }
-        public ICollection<Class>? Classes { get; set; }
-    }
+    public string? CourseName { get; set; }
+
+    public string? CourseDescription { get; set; }
+
+    public int? Credits { get; set; }
+
+    public int? MajorId { get; set; }
+
+    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+
+    public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
+
+    public virtual Major? Major { get; set; }
 }

@@ -8,6 +8,9 @@ namespace ASM2_KSTH.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+       
+
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
