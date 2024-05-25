@@ -58,7 +58,7 @@ namespace ASM2_KSTH.Controllers.Grade
                 {
                     StudentId = e.Student.StudentId,
                     Name = e.Student.Name,
-                    DateOfBirth = e.Student.DateOfBirth ?? DateOnly.MinValue,
+                   
                     Address = e.Student.Address,
                     PhoneNumber = e.Student.PhoneNumber,
                     Email = e.Student.Email,

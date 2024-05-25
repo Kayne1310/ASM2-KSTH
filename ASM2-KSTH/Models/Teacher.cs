@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace ASM2_KSTH.Models;
 
@@ -15,9 +15,17 @@ public partial class Teacher
 
     public string? PhoneNumber { get; set; }
 
+        public ICollection<Class>? Classes { get; set; }
+
+    [Display(Name = "Username")]
+    [Required(ErrorMessage = "*")]
+    [MinLength(6, ErrorMessage = "Username must be at least 6 characters")]
     public string? Username { get; set; }
 
+    [Display(Name = "Password")]
+    [Required(ErrorMessage = "*")]
+    [DataType(DataType.Password)]
     public string? Password { get; set; }
+    
 
-    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
 }
