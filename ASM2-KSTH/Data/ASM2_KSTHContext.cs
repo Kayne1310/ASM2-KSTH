@@ -27,7 +27,7 @@ namespace ASM2_KSTH.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-T5I26HK;Initial Catalog=KSTH;Integrated Security=True;Trust Server Certificate=True");
+            optionsBuilder.UseSqlServer("Data Source=LAPTOP-0CSOM6F0\\SQLEXPRESS;Initial Catalog=KSTH;Integrated Security=True;Trust Server Certificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +72,26 @@ namespace ASM2_KSTH.Data
                   .HasForeignKey(e => e.StudentId)
                   .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Schedule>()
+            .HasOne(s => s.Class)
+            .WithMany()
+            .HasForeignKey(s => s.ClassID)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Schedule>()
+                .HasOne(s => s.Student)
+                .WithMany()
+                .HasForeignKey(s => s.StudentID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Schedule>()
+                .HasOne(s => s.Course)
+                .WithMany()
+                .HasForeignKey(s => s.CourseID)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
+        public DbSet<ASM2_KSTH.Models.Schedule> Schedule { get; set; } = default!;
     }
     
 }
