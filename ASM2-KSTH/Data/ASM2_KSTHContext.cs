@@ -25,10 +25,7 @@ namespace ASM2_KSTH.Data
         public DbSet<Room> Rooms { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-T5I26HK;Initial Catalog=KSTH;Integrated Security=True;Trust Server Certificate=True");
-        }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Major>()
