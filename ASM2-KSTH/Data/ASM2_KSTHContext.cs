@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ASM2_KSTH.Models;
+using ASM2_KSTH.ViewModels;
 
 namespace ASM2_KSTH.Data
 {
@@ -17,11 +18,10 @@ namespace ASM2_KSTH.Data
         public DbSet<ASM2_KSTH.Models.Student> Lstudent { get; set; } = default!;
         public DbSet<ASM2_KSTH.Models.Admin> Ladmin { get; set; } = default!;
         public DbSet<ASM2_KSTH.Models.Teacher> Lteacher { get; set; } = default!;
-
         public DbSet<Major> Majors { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Class> Classes { get; set; }
-        public DbSet<Enrollments> Enrollments { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Room> Rooms { get; set; }
 
@@ -32,6 +32,7 @@ namespace ASM2_KSTH.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Major>()
                 .HasMany(m => m.Students)
                 .WithOne(s => s.Major)
@@ -62,18 +63,19 @@ namespace ASM2_KSTH.Data
                 .WithOne(e => e.Class)
                 .HasForeignKey(e => e.ClassId);
 
-            modelBuilder.Entity<Student>()
+            modelBuilder.Entity<StudentRegister>()
                 .HasMany(s => s.Enrollments)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId);
 
-            modelBuilder.Entity<Enrollments>()
-                  .HasOne(e => e.Student)
-                  .WithMany(s => s.Enrollments)
-                  .HasForeignKey(e => e.StudentId)
-                  .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.Enrollments)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
+
 
     }
     

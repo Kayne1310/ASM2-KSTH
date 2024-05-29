@@ -12,6 +12,6 @@
         public Course ? Course { get; set; }
         public Teacher ? Teacher { get; set; }
         public Room ? Room { get; set; }
-        public ICollection<Enrollments>? Enrollments { get; set; }
+        public ICollection<Enrollment>? Enrollments { get; set; }
     }
 }

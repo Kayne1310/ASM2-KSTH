@@ -7,6 +7,6 @@
         public string? GradeValue { get; set; }
         public DateTime GradeDate { get; set; }
 
-        public Enrollments ? Enrollment { get; set; }
+        public Enrollment ? Enrollment { get; set; }
     }
 }

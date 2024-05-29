@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using ASM2_KSTH.Data;
 using ASM2_KSTH.Models;
 using Microsoft.AspNetCore.Authorization;
+using ASM2_KSTH.ViewModels;
+using System.Diagnostics;
 
 namespace ASM2_KSTH.Controllers
 {
@@ -21,6 +23,7 @@ namespace ASM2_KSTH.Controllers
             _context = context;
         }
 
+        #region Login
         // GET: Students
         [HttpGet]
         public IActionResult Index(string? ReturnUrl)
@@ -60,7 +63,9 @@ namespace ASM2_KSTH.Controllers
             }
             return View("Index", model);
         }
+        #endregion
 
+       
 
 
         [Authorize]

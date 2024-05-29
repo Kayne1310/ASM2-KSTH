@@ -8,12 +8,13 @@ namespace ASM2_KSTH.Models
 
         [Display(Name = "Username")]
         [Required(ErrorMessage = "*")]
-        [MinLength(6, ErrorMessage = "Username must be at least 6 characters")]
+        [MinLength(5, ErrorMessage = "Username must be at least 5 characters")]
         public string? Username { get; set; }
 
         [Display(Name = "Password")]
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
+
     }
 }

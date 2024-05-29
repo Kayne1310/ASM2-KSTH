@@ -31,17 +31,17 @@
                             <a asp-controller="Admins" asp-action="Index" class="abc" style="color: black; background-color: white">Admin</a>
                         </div>
 
-                        <form asp-action="Index" asp-route-returnurl="@ViewBag.ReturnUrl">                         
+                        <form asp-action="Index" asp-route-returnurl="@ViewBag.ReturnUrl">
                             <div class="form-group first">
                                 <label asp-for="@Model.Username" class="form-label my-3"></label>
                                 <sup>*</sup>
-                                <input asp-for="@Model.Username" class="form-control" placeholder="Enter username" required>
+                                <input asp-for="@Model.Username" class="form-control" placeholder="Enter username" >
                                 <span asp-validation-for="@Model.Username" class="text-danger"></span>
                             </div>
                             <div class="form-group last mb-3">
                                 <label asp-for="@Model.Password" class="form-label my-3"></label>
                                 <sup>*</sup>
-                                <input asp-for="@Model.Password" class="form-control" placeholder="Enter password" required>
+                                <input asp-for="@Model.Password" class="form-control" placeholder="Enter password" >
                                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
                             </div>
                             <div class="d-flex mb-3 align-items-center">

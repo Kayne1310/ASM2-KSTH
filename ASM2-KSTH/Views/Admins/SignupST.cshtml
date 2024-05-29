@@ -1,0 +1,128 @@
+﻿@model ASM2_KSTH.ViewModels.StudentRegister
+
+@{
+    ViewData["Title"] = "SignupST";
+    Layout = null;
+}
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"]</title>
+    <!--favicon-->
+    <link rel="icon" href="~/assets/images/favicon-32x32.png" type="image/png">
+
+    <!--plugins-->
+    <link href="~/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+    <!--bootstrap css-->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!--main css-->
+    <link href="~/assets/css/bootstrap-extended.css" rel="stylesheet">
+    <link href="~/sass/main.css" rel="stylesheet">
+    <link href="~/sass/dark-theme.css" rel="stylesheet">
+    <link href="~/sass/responsive.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid my-5">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-5 mx-auto">
+                <div class="card rounded-4">
+                    <div class="card-body p-5">
+                        <img src="~/assets/images/logo1.png" class="mb-4" width="145" alt="">
+                        <h4 class="fw-bold">Register for Student</h4>
+                        <p class="mb-0">Enter your credentials to create your account</p>
+
+                        <div class="form-body my-4">
+                            <form asp-action="SignupST" asp-route-returnurl="@ViewBag.ReturnUrl" class="row g-3">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                <div class="col-12">
+                                    <label asp-for="Name" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <input asp-for="Name" class="form-control">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="DateOfBirth" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <input asp-for="DateOfBirth" class="form-control">
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="Address" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <input asp-for="Address" class="form-control">
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="PhoneNumber" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <input asp-for="PhoneNumber" class="form-control">
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <input asp-for="Email" class="form-control">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="MajorName" class="form-label"></label>
+                                    <select asp-for="MajorName" class="form-select" aria-label="Default select example">
+                                        @foreach (var major in ViewBag.Majors)
+                                        {
+                                            <option value="@major.MajorName">@major.MajorName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="MajorName" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="Username" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <input asp-for="Username" class="form-control">
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="Password" class="form-label"></label>
+                                    <sup>*</sup>
+                                    <div class="input-group" id="show_hide_password">
+                                        <input asp-for="Password" class="form-control">                                     
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Register</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div><!--end row-->
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#majorNameDropdown').change(function () {
+                var selectedMajorName = $(this).val();
+                $.ajax({
+                    url: '/YourController/GetMajorId',
+                    type: 'GET',
+                    data: { majorName: selectedMajorName },
+                    success: function (data) {
+                        $('#majorId').val(data.majorId);
+                    },
+                    error: function () {
+                        alert('Error occurred while retrieving MajorId.');
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -16,8 +16,15 @@
     <None Include="wwwroot\assets\fonts\fa-regular-400.woff2" />
     <None Include="wwwroot\assets\fonts\fa-solid-900.svg" />
     <None Include="wwwroot\assets\fonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\assets\fonts\LineIcons.svg" />
+    <None Include="wwwroot\assets\fonts\LineIcons.woff2" />
     <None Include="wwwroot\assets\fonts\materialdesignicons-webfont2d61.woff2" />
     <None Include="wwwroot\assets\js\app.js" />
+    <None Include="wwwroot\assets\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\js\index.js" />
+    <None Include="wwwroot\assets\js\index2.js" />
+    <None Include="wwwroot\assets\js\jquery.min.js" />
+    <None Include="wwwroot\assets\js\main.js" />
     <None Include="wwwroot\assets\js\pages\alert.init.js" />
     <None Include="wwwroot\assets\js\pages\apexcharts.init.js" />
     <None Include="wwwroot\assets\js\pages\calendar.init.js" />
@@ -90,10 +97,47 @@
     <None Include="wwwroot\assets\libs\tui-chart\maps\usa.js" />
     <None Include="wwwroot\assets\libs\tui-chart\tui-chart-all.min.js" />
     <None Include="wwwroot\assets\libs\wnumb\wNumb.min.js" />
+    <None Include="wwwroot\assets\plugins\apexchart\apex-custom-chart.js" />
+    <None Include="wwwroot\assets\plugins\apexchart\apexcharts.min.js" />
+    <None Include="wwwroot\assets\plugins\apexchart\data-cards.js" />
+    <None Include="wwwroot\assets\plugins\bs-stepper\js\bs-stepper.min.js" />
+    <None Include="wwwroot\assets\plugins\bs-stepper\js\main.js" />
+    <None Include="wwwroot\assets\plugins\chartjs\js\chart.js" />
+    <None Include="wwwroot\assets\plugins\chartjs\js\chartjs-custom.js" />
+    <None Include="wwwroot\assets\plugins\datatable\js\dataTables.bootstrap5.min.js" />
+    <None Include="wwwroot\assets\plugins\datatable\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\assets\plugins\Drag-And-Drop\dist\imageuploadify.min.js" />
+    <None Include="wwwroot\assets\plugins\fancy-file-uploader\jquery.fancy-fileupload.js" />
+    <None Include="wwwroot\assets\plugins\fancy-file-uploader\jquery.fileupload.js" />
+    <None Include="wwwroot\assets\plugins\fancy-file-uploader\jquery.iframe-transport.js" />
+    <None Include="wwwroot\assets\plugins\fancy-file-uploader\jquery.ui.widget.js" />
+    <None Include="wwwroot\assets\plugins\form-repeater\repeater.js" />
+    <None Include="wwwroot\assets\plugins\fullcalendar\js\main.min.js" />
+    <None Include="wwwroot\assets\plugins\gmaps\map-custom-script.js" />
+    <None Include="wwwroot\assets\plugins\input-tags\js\tagsinput.js" />
+    <None Include="wwwroot\assets\plugins\metismenu\metisMenu.min.js" />
+    <None Include="wwwroot\assets\plugins\notifications\js\lobibox.min.js" />
+    <None Include="wwwroot\assets\plugins\notifications\js\notification-custom-script.js" />
+    <None Include="wwwroot\assets\plugins\notifications\js\notifications.min.js" />
+    <None Include="wwwroot\assets\plugins\peity\jquery.peity.min.js" />
+    <None Include="wwwroot\assets\plugins\perfect-scrollbar\js\perfect-scrollbar.js" />
+    <None Include="wwwroot\assets\plugins\select2\js\select2-custom.js" />
+    <None Include="wwwroot\assets\plugins\simplebar\js\simplebar.min.js" />
+    <None Include="wwwroot\assets\plugins\validation\jquery.validate.min.js" />
+    <None Include="wwwroot\assets\plugins\validation\validation-script.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jquery-jvectormap-2.0.2.min.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jquery-jvectormap-au-mill.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jquery-jvectormap-in-mill.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jquery-jvectormap-uk-mill-en.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jquery-jvectormap-us-aea-en.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jquery-jvectormap-world-mill-en.js" />
+    <None Include="wwwroot\assets\plugins\vectormap\jvectormap.custom.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -103,7 +147,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\bootstrap\" />
+    <Folder Include="wwwroot\lib\bootstrap\dist\js\" />
+    <Folder Include="wwwroot\lib\jquery-validation-unobtrusive\" />
+    <Folder Include="wwwroot\lib\jquery-validation\" />
+    <Folder Include="wwwroot\lib\jquery-validation\dist\" />
+    <Folder Include="wwwroot\lib\jquery\" />
+    <Folder Include="wwwroot\lib\jquery\dist\" />
   </ItemGroup>
 
 </Project>
