@@ -87,7 +87,6 @@ namespace ASM2_KSTH.Controllers.Grade
             ViewData["ClassId"] = classId;
             return View(students);
         }
-
         public async Task<IActionResult> Edit(int id, int classId)
         {
             var grade = await _context.Grades.FindAsync(id);

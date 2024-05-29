@@ -5,11 +5,14 @@
     Layout = "~/Views/Shared/LayoutKSTH.cshtml";
 }
 
-<h1>ListStudents</h1>
+@foreach(var student in Model)
+{
+    
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    <p class="fw-bold fs-5" style="margin-bottom:15px">List Grade of Students of @student.ClassName</p>
+}
+
+
 
 
 <div class="card">
@@ -24,6 +27,7 @@
                         <th>Major Name</th>
                         <th>Grade </th>
                         <th>Action</th>
+                       >
                     </tr>
                 </thead>
                 <tbody>
@@ -36,10 +40,20 @@
                             <td>@student.ClassName</td>
                             <td>@student.MajorName</td>
                             <td>@student.Grade1</td>
+                           
 
                             <td>
-                                <a asp-action="Edit" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">
+                                    <button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
+                                        <i class="material-icons-outlined">cloud_upload</i> Edit
+                                    </button>
+                                </a>
+
+
+                                <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">     <button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important"><i class="material-icons-outlined">delete</i> Delete</button></a>
+                                   
+
+                                
                             </td>
                         </tr>
                     }
@@ -47,7 +61,8 @@
                
             </table>
             <p>
-                <a asp-controller="grades" asp-action="index">Back </a>
+                <a asp-controller="grades" asp-action="index"><button type="button" class="btn btn-warning px-5">Back</button> </a>
+                
             </p>
 
         </div>
