@@ -14,6 +14,7 @@ namespace ASM2_KSTH.ViewModels
         public string Name { get; set; }
 
 		[Display(Name = "Date Of Birth")]
+		[Required(ErrorMessage = "Date Of Birth is required")]
 		[DataType(DataType.Date)]
 		public DateTime? DateOfBirth { get; set; }
 
@@ -24,8 +25,8 @@ namespace ASM2_KSTH.ViewModels
 
 		[Display(Name = "Phone number")]
 		[Required(ErrorMessage = "Phone number is required")]
-		[MaxLength(10, ErrorMessage = "Tối đa 10 kí tự")]
-		[RegularExpression(@"0[982]\d{8}", ErrorMessage = "Định dạng +84 chưa đúng")]
+		[MaxLength(10, ErrorMessage = "Maximum 10 characters")]
+		[RegularExpression(@"0[982]\d{8}", ErrorMessage = "+84 format is not correct")]
 		public string PhoneNumber { get; set; }
 
 		[Display(Name = "Email")]
@@ -33,8 +34,10 @@ namespace ASM2_KSTH.ViewModels
 		[EmailAddress(ErrorMessage = "Incorrect email format")]
 		public string Email { get; set; }
 		public int MajorId { get; set; } // Foreign Key
+
+		[Required(ErrorMessage = "MajorName is required")]
 		public string MajorName { get; set; }
-		public Major? Major { get; set; }
+		public Major Major { get; set; }
 
 		[Display(Name = "Username")]
 		[Required(ErrorMessage = "Username is required")]

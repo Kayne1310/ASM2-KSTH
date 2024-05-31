@@ -71,12 +71,14 @@
                                 <div class="col-12">
                                     <label asp-for="MajorName" class="form-label"></label>
                                     <select asp-for="MajorName" class="form-select" aria-label="Default select example">
-                                        @foreach (var major in ViewBag.Majors)
+                                        @if (ViewBag.Majors != null)
                                         {
-                                            <option value="@major.MajorName">@major.MajorName</option>
-                                        }
+                                            @foreach (var major in ViewBag.Majors)
+                                            {
+                                                <option value="@major.MajorName">@major.MajorName</option>
+                                            }
+                                        }                                     
                                     </select>
-                                    <span asp-validation-for="MajorName" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Username" class="form-label"></label>
@@ -105,24 +107,5 @@
             </div>
         </div><!--end row-->
     </div>
-    <script>
-        $(document).ready(function () {
-            $('#majorNameDropdown').change(function () {
-                var selectedMajorName = $(this).val();
-                $.ajax({
-                    url: '/YourController/GetMajorId',
-                    type: 'GET',
-                    data: { majorName: selectedMajorName },
-                    success: function (data) {
-                        $('#majorId').val(data.majorId);
-                    },
-                    error: function () {
-                        alert('Error occurred while retrieving MajorId.');
-                    }
-                });
-            });
-        });
-
-    </script>
 </body>
 </html>

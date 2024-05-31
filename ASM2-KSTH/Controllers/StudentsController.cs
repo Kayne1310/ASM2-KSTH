@@ -11,6 +11,7 @@ using ASM2_KSTH.Models;
 using Microsoft.AspNetCore.Authorization;
 using ASM2_KSTH.ViewModels;
 using System.Diagnostics;
+using ASM2_KSTH.Helpers;
 
 namespace ASM2_KSTH.Controllers
 {
@@ -23,12 +24,13 @@ namespace ASM2_KSTH.Controllers
             _context = context;
         }
 
-        #region Login
+        #region Login for Student
         // GET: Students
         [HttpGet]
         public IActionResult Index(string? ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
+            ViewData["ReturnUrl"] = ReturnUrl;
             return View();
         }
 
@@ -40,12 +42,27 @@ namespace ASM2_KSTH.Controllers
             if (ModelState.IsValid)
             {
                 // Thực hiện xác thực thông tin đăng nhập tại đây
-                var user = await _context.Lstudent.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password);
+                var student =  _context.Lstudent.SingleOrDefault(u => u.Username == model.Username);
 
-                if (user != null)
+                if (student == null || student.Password != model.Password.ToMd5Hash(student.RandomKey))
                 {
-                    // Xác thực thành công, chuyển hướng đến trang mong muốn
-                    if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                    // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
+                    ViewBag.ErrorMessage = "Invalid username or password.";
+                    return View("Index", model);
+
+                }
+                else
+                {
+                    var claims = new List<Claim>
+                  {
+                      new Claim(MySetting.CLAIM_ID, student.Username),
+                  };
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync(claimsPrincipal);
+
+                    if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
@@ -54,18 +71,10 @@ namespace ASM2_KSTH.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
-                else
-                {
-                    // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
-                    ViewBag.ErrorMessage = "Invalid username or password.";
-                    return View("Index", model);
-                }
             }
-            return View("Index", model);
+            return View();
         }
         #endregion
-
-       
 
 
         [Authorize]
