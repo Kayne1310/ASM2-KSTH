@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
 
-namespace ASM2_KSTH.Models
-{
+namespace ASM2_KSTH.Models;
+
+
+
     public class Teacher
     {
         public int TeacherId { get; set; } // Primary Key
@@ -36,6 +39,9 @@ namespace ASM2_KSTH.Models
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
-        public ICollection<Class>? Classes { get; set; }
-    }
+
+        [ForeignKey("Roles")]    
+        public int RoleId {  get; set; }
+        public virtual Roles? Roles { get; set; }
+
 }

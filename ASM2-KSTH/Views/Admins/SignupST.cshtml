@@ -81,6 +81,12 @@
                                     </select>
                                 </div>
                                 <div class="col-12">
+                                    <label asp-for="RoleId" class="form-label"></label>
+                                    <sup>*</sup>
+                                        <input asp-for="RoleId" class="form-control" value="1" type="hidden">
+                                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
                                     <label asp-for="Username" class="form-label"></label>
                                     <sup>*</sup>
                                     <input asp-for="Username" class="form-control">
@@ -93,6 +99,9 @@
                                         <input asp-for="Password" class="form-control">                                     
                                     </div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <span class="text-danger">@ViewBag.ErrorMessage</span>
                                 </div>
                                 <div class="col-12">
                                     <div class="d-grid">

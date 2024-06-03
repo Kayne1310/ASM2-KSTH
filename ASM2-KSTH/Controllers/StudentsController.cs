@@ -25,6 +25,7 @@ namespace ASM2_KSTH.Controllers
         }
 
         #region Login for Student
+        
         // GET: Students
         [HttpGet]
         public IActionResult Index(string? ReturnUrl)
@@ -38,12 +39,9 @@ namespace ASM2_KSTH.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Student model, string? ReturnUrl)
         {
-            ViewBag.ReturnUrl = ReturnUrl;
-            if (ModelState.IsValid)
-            {
+                ViewBag.ReturnUrl = ReturnUrl;
                 // Thực hiện xác thực thông tin đăng nhập tại đây
-                var student =  _context.Lstudent.SingleOrDefault(u => u.Username == model.Username);
-
+                var student =  _context.Students.SingleOrDefault(u => u.Username == model.Username);
                 if (student == null || student.Password != model.Password.ToMd5Hash(student.RandomKey))
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
@@ -53,10 +51,13 @@ namespace ASM2_KSTH.Controllers
                 }
                 else
                 {
+                    var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == student.RoleId);
                     var claims = new List<Claim>
-                  {
-                      new Claim(MySetting.CLAIM_ID, student.Username),
-                  };
+                    {
+                        new Claim(ClaimTypes.Role, "Students"),
+                        new Claim(MySetting.CLAIM_ID, student.Username),
+                    };
+                    Console.WriteLine(student);
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
@@ -71,17 +72,23 @@ namespace ASM2_KSTH.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
-            }
+
             return View();
         }
         #endregion
 
 
-        [Authorize]
+        [Authorize(Roles = "Students")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
             return Redirect("/");
+        }
+
+        [Authorize(Roles = "Students")]
+        public ActionResult StudentPage()
+        {
+            return View();
         }
     }
 }

@@ -1,13 +1,18 @@
-﻿using ASM2_KSTH.ViewModels;
 
-namespace ASM2_KSTH.Models
+﻿using ASM2_KSTH.ViewModels;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ASM2_KSTH.Models;
+
+public partial class Major
 {
-    public class Major
-    {
-        public int MajorId { get; set; } // Primary Key
-        public string? MajorName { get; set; }
-        public ICollection<StudentRegister>? Students { get; set; }
-        public ICollection<Course>? Courses { get; set; }
-    }
+    public int MajorId { get; set; }
+
+    public string? MajorName { get; set; }
+
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 
 }

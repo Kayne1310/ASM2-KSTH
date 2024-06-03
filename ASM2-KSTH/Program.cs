@@ -17,7 +17,7 @@ namespace ASM2_KSTH
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                
+
                 options.LoginPath = "/Admins/Index";
                 options.AccessDeniedPath = "/AccessDenied";
             });

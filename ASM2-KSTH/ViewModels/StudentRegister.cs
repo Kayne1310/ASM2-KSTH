@@ -1,6 +1,7 @@
 ﻿
 using ASM2_KSTH.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASM2_KSTH.ViewModels
 
@@ -49,6 +50,9 @@ namespace ASM2_KSTH.ViewModels
 		[DataType(DataType.Password)]
 		public string Password { get; set; }
 
-		public ICollection<Enrollment>? Enrollments { get; set; }
+        [ForeignKey("Roles")]
+        public int RoleId { get; set; }
+        public virtual Roles? Roles { get; set; }
+        public ICollection<Enrollment>? Enrollments { get; set; }
 	}
 }

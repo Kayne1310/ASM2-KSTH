@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASM2_KSTH.Models
 {
@@ -16,5 +17,9 @@ namespace ASM2_KSTH.Models
         [DataType(DataType.Password)]
         public string? Password { get; set; }
 
+
+        [ForeignKey("Roles")]
+        public int RoleId { get; set; }
+        public virtual Roles? Roles { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using ASM2_KSTH.ViewModels;
 using AutoMapper;
 using ASM2_KSTH.Helpers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ASM2_KSTH.Controllers
 {
@@ -24,6 +25,7 @@ namespace ASM2_KSTH.Controllers
         }
 
         #region Login for Admin
+       
         // GET: Admins
         [HttpGet]
         public IActionResult Index(string? ReturnUrl)
@@ -37,21 +39,16 @@ namespace ASM2_KSTH.Controllers
             return View();
         }
     
-        public IActionResult SignupTE()
-        {
-            return View();
-        }
 
         // POST: Admins
         [HttpPost]
         public async Task<IActionResult> Index(Admin model, string? ReturnUrl)
         {
-            ViewBag.ReturnUrl = ReturnUrl;
-            if (ModelState.IsValid)
-            {
+     
+                ViewBag.ReturnUrl = ReturnUrl;
                 // Thực hiện xác thực thông tin đăng nhập tại đây
-                var admin = await _context.Ladmin.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password); 
-
+                var admin = await _context.Admins.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password); 
+                
                 if (admin == null)
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
@@ -61,11 +58,15 @@ namespace ASM2_KSTH.Controllers
                 }
                 else
                 {
+                    var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == admin.RoleId);
                     var claims = new List<Claim>
                     {
+                        new Claim(ClaimTypes.Role, "Admins"),
                         new Claim(MySetting.CLAIM_ID, admin.Username),
+
                     };
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+              
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
@@ -79,13 +80,13 @@ namespace ASM2_KSTH.Controllers
                         return RedirectToAction("AdminPage", "Admins");
                     }
                 }
-            }
-            return View();
+                return View();
         }
         #endregion
 
         #region Register for Student
-        [Authorize]
+
+        [Authorize(Roles = "Admins")]
         [HttpGet]
         public IActionResult SignupST(string? ReturnUrl)
         {
@@ -100,8 +101,15 @@ namespace ASM2_KSTH.Controllers
         {
             try
             {
-                 ViewBag.ReturnUrl = ReturnUrl;
+                ViewBag.ReturnUrl = ReturnUrl;
                 ViewBag.Majors = _context.Majors.ToList();
+                var existingStudent = _context.Students.FirstOrDefault(t => t.Username == model.Username);
+                if (existingStudent != null)
+                {
+                    // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
+                    ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                    return View();
+                }
                 // Truy vấn cơ sở dữ liệu để lấy MajorId dựa trên MajorName
                 var major = _context.Majors.FirstOrDefault(m => m.MajorName == model.MajorName);
 				if (major == null)
@@ -114,10 +122,11 @@ namespace ASM2_KSTH.Controllers
                     var student = _mapper.Map<Student>(model);
                     student.RandomKey = MyUtil.GenerateRandomKey();
                     student.Password = model.Password.ToMd5Hash(student.RandomKey);
+                    student.RoleId = model.RoleId;
                     student.MajorId = major.MajorId;
 
                     // Thêm sinh viên mới vào cơ sở dữ liệu
-                    _context.Lstudent.Add(student);
+                    _context.Students.Add(student);
                     _context.SaveChanges();
                     return RedirectToAction("AdminPage", "Admins");
             }
@@ -133,12 +142,12 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
         #region Register for Teacher
-        [Authorize]
+      
         [HttpGet]
         public IActionResult SignupTE(string? ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
-            ViewBag.Teachers = _context.Lteacher.ToList();
+            //ViewBag.Teachers = _context.Teachers.ToList();
             return View();
         }
 
@@ -149,6 +158,13 @@ namespace ASM2_KSTH.Controllers
             try
             {
                 ViewBag.ReturnUrl = ReturnUrl;
+                var existingTeacher = _context.Teachers.FirstOrDefault(t => t.Username == model.Username);
+                if (existingTeacher != null)
+                {
+                    // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
+                    ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                    return View();
+                }
                 var teacher = new Teacher
                 {             
                     Name = model.Name,  // Example property
@@ -158,13 +174,14 @@ namespace ASM2_KSTH.Controllers
                     RandomKey = model.RandomKey, 
                     Username = model.Username,
                     Password = model.Password,
+                    RoleId = model.RoleId,
 
                 };
                 teacher.RandomKey = MyUtil.GenerateRandomKey();
                 teacher.Password = model.Password.ToMd5Hash(teacher.RandomKey);
 
                 // Thêm giáo viên mới vào cơ sở dữ liệu
-                _context.Lteacher.Add(teacher);
+                _context.Teachers.Add(teacher);
                 _context.SaveChanges();
                 return RedirectToAction("AdminPage", "Admins");
             }
@@ -180,7 +197,8 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
 
-        [Authorize]
+
+        [Authorize(Roles = "Admins")]
         public ActionResult Profile() {
             return View();        
         }

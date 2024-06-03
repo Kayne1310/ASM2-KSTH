@@ -37,10 +37,15 @@ namespace ASM2_KSTH.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Teacher model, string? ReturnUrl)
         {
-                 ViewBag.ReturnUrl = ReturnUrl;
+
+            ViewBag.ReturnUrl = ReturnUrl;
+
+    
+                // Thực hiện xác thực thông tin đăng nhập tại đây
+
 
                 // Thực hiện xác thực thông tin đăng nhập tại đây
-                var teacher = _context.Lteacher.SingleOrDefault(u => u.Username == model.Username);
+                var teacher = _context.Teachers.SingleOrDefault(u => u.Username == model.Username);
 
                 if (teacher == null || teacher.Password != model.Password.ToMd5Hash(teacher.RandomKey))
                 {
@@ -51,10 +56,12 @@ namespace ASM2_KSTH.Controllers
                 }
                 else
                 {
+                    var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == teacher.RoleId);
                     var claims = new List<Claim>
-                  {
-                      new Claim(MySetting.CLAIM_ID, teacher.Username),
-                  };
+                    {
+                        new Claim(ClaimTypes.Role, "Teachers"),
+                        new Claim(MySetting.CLAIM_ID, teacher.Username),
+                    };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
@@ -68,14 +75,21 @@ namespace ASM2_KSTH.Controllers
                     {
                         return RedirectToAction("Index", "Home");
                     }
+        
+
+                
+
                 }
+                return View();
+           
+
+
+
 
         }
-    #endregion
+        #endregion
 
-
-
-        [Authorize]
+        [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();

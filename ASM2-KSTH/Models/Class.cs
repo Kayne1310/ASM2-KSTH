@@ -1,17 +1,31 @@
-﻿namespace ASM2_KSTH.Models
-{
-    public class Class
-    {
-        public int ClassId { get; set; } // Primary Key
-        public int CourseId { get; set; } // Foreign Key
-        public int TeacherId { get; set; } // Foreign Key
-        public string ? Semester { get; set; }
-        public int Year { get; set; }
-        public int RoomId { get; set; } // Foreign Key
+﻿using System;
+using System.Collections.Generic;
 
-        public Course ? Course { get; set; }
-        public Teacher ? Teacher { get; set; }
-        public Room ? Room { get; set; }
-        public ICollection<Enrollment>? Enrollments { get; set; }
-    }
+
+namespace ASM2_KSTH.Models;
+
+public partial class Class
+{
+    public int ClassId { get; set; }
+
+    public int? CourseId { get; set; }
+
+    public int? TeacherId { get; set; }
+
+    public string? Semester { get; set; }
+
+    public int? Year { get; set; }
+
+    public int? RoomId { get; set; }
+
+    public string? ClassName { get; set; }
+
+    public virtual Course? Course { get; set; }
+
+    public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+
+    public virtual Room? Room { get; set; }
+
+    public virtual Teacher? Teacher { get; set; }
+
 }

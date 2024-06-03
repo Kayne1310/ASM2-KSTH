@@ -1,7 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
 
-namespace ASM2_KSTH.Models
-{
+﻿using System;
+using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ASM2_KSTH.Models;
+
+
+
     public class Student
     {
         [Key]
@@ -16,6 +22,7 @@ namespace ASM2_KSTH.Models
         public string? RandomKey { get; set; }
 
         [Display(Name = "Username")]
+
 		[Required(ErrorMessage = "Username is required")]
 		[MinLength(5, ErrorMessage = "Username must be at least 6 characters")]
 		public string? Username { get; set; }
@@ -24,9 +31,9 @@ namespace ASM2_KSTH.Models
 		[Required(ErrorMessage = "Password is required")]
 		[DataType(DataType.Password)]
 		public string? Password { get; set; }
+
+        [ForeignKey("Roles")]
+        public int RoleId { get; set; }
+        public virtual Roles? Roles { get; set; }
         public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
-
-
     }
-
-}
