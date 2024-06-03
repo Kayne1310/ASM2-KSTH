@@ -172,49 +172,76 @@ namespace ASM2_KSTH.Migrations
             });
 
             modelBuilder.Entity("ASM2_KSTH.Models.Student", b =>
-            {
-                b.Property<int>("StudentId")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+
+                {
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Lstudent");
+                });
+
+            modelBuilder.Entity("ASM2_KSTH.Models.StudentRegister", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
 
                 SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
-                b.Property<string>("Address")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
 
-                b.Property<DateTime>("DateOfBirth")
-                    .HasColumnType("datetime2");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                b.Property<string>("Email")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
 
                 b.Property<int>("MajorId")
                     .HasColumnType("int");
 
-                b.Property<string>("Name")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+
 
                 b.Property<string>("Password")
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("PhoneNumber")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("Username")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
 
                 b.HasKey("StudentId");
 
                 b.HasIndex("MajorId");
 
-                b.ToTable("Students");
-            });
+
+                    b.ToTable("Rstudent");
+                });
 
             modelBuilder.Entity("ASM2_KSTH.Models.Teacher", b =>
             {
@@ -320,11 +347,13 @@ namespace ASM2_KSTH.Migrations
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("ASM2_KSTH.Models.Student", "Student")
-                    .WithMany("Enrollments")
-                    .HasForeignKey("StudentId")
-                    .OnDelete(DeleteBehavior.NoAction)
-                    .IsRequired();
+
+                    b.HasOne("ASM2_KSTH.Models.StudentRegister", "Student")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
 
                 b.Navigation("Class");
 
@@ -350,13 +379,15 @@ namespace ASM2_KSTH.Migrations
                 b.Navigation("Enrollment");
             });
 
-            modelBuilder.Entity("ASM2_KSTH.Models.Student", b =>
-            {
-                b.HasOne("ASM2_KSTH.Models.Major", "Major")
-                    .WithMany("Students")
-                    .HasForeignKey("MajorId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+
+            modelBuilder.Entity("ASM2_KSTH.Models.StudentRegister", b =>
+                {
+                    b.HasOne("ASM2_KSTH.Models.Major", "Major")
+                        .WithMany("Students")
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
 
                 b.Navigation("Major");
             });
@@ -388,10 +419,12 @@ namespace ASM2_KSTH.Migrations
                 b.Navigation("Classes");
             });
 
-            modelBuilder.Entity("ASM2_KSTH.Models.Student", b =>
-            {
-                b.Navigation("Enrollments");
-            });
+
+            modelBuilder.Entity("ASM2_KSTH.Models.StudentRegister", b =>
+                {
+                    b.Navigation("Enrollments");
+                });
+
 
             modelBuilder.Entity("ASM2_KSTH.Models.Teacher", b =>
             {
