@@ -197,11 +197,6 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
 
-
-        [Authorize(Roles = "Admins")]
-        public ActionResult Profile() {
-            return View();        
-        }
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
