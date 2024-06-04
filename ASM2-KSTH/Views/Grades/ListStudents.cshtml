@@ -5,12 +5,11 @@
     Layout = "~/Views/Shared/LayoutTeacher.cshtml";
 }
 
-@foreach(var student in Model)
-{
+
     
 
-    <p class="fw-bold fs-5" style="margin-bottom:15px">List Grade of Students of @student.ClassName</p>
-}
+    <p class="fw-bold fs-5" style="margin-bottom:15px">List Grade of Students of </p>
+
 
 <div class="card">
     <div class="card-body">
@@ -40,14 +39,17 @@
                            
 
                             <td>
-                                <a asp-action="Edit" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">
-                                    <button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
+                                <a asp-action="Edit" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
+                                 
                                         <i class="material-icons-outlined">cloud_upload</i> Edit
-                                    </button>
+                                    
                                 </a>
 
 
-                                <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">     <button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important"><i class="material-icons-outlined">delete</i> Delete</button></a>
+                                <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
+
+                                    <i class="material-icons-outlined">delete</i> Delete
+                                  </a>
                                    
 
                                 

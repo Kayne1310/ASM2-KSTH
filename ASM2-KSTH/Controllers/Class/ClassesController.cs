@@ -21,6 +21,7 @@ namespace ASM2_KSTH.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Index()
         {
             var classEntities = await _context.Classes
@@ -46,9 +47,9 @@ namespace ASM2_KSTH.Controllers
 
             return View(viewModelList);
         }
-        
 
 
+   
         public async Task<IActionResult> Edit(int? classId)
         {
             if (classId == null)
@@ -85,6 +86,8 @@ namespace ASM2_KSTH.Controllers
 
             return View(viewModel);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -194,6 +197,7 @@ namespace ASM2_KSTH.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Create()
         {
             // Populate ViewBag with the necessary data for dropdown lists
@@ -266,6 +270,7 @@ namespace ASM2_KSTH.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> ListRoom() 
         {
             var rooms = await _context.Rooms.ToListAsync();
@@ -274,6 +279,7 @@ namespace ASM2_KSTH.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> CreateRoom()
         {
             

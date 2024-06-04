@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ASM2_KSTH.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ASM2_KSTH.Helpers;
 namespace ASM2_KSTH
 {
     public class Program
@@ -16,12 +17,18 @@ namespace ASM2_KSTH
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                options.LoginPath = "/Students/Index";
-                options.LoginPath = "/Teachers/Index";
-                options.LoginPath = "/Admins/Index";
-                options.AccessDeniedPath = "/";
-            });
 
+                options.LoginPath = "/Admins/Index";
+                options.AccessDeniedPath = "/AccessDenied";
+            });
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,16 +40,21 @@ namespace ASM2_KSTH
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Classes}/{action=Index}/{id?}");
+                pattern: "{controller=Admins}/{action=Index}/{id?}");
+
 
             app.Run();
         }

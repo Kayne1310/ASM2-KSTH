@@ -9,6 +9,11 @@ using ASM2_KSTH.Data;
 using ASM2_KSTH.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ASM2_KSTH.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace ASM2_KSTH.Controllers.Grade
 {
@@ -21,6 +26,8 @@ namespace ASM2_KSTH.Controllers.Grade
             _context = context;
         }
 
+      
+        [Authorize(Roles = "Teachers")]
         public IActionResult Index()
         {
             var courses = _context.Courses.ToList();
@@ -43,6 +50,7 @@ namespace ASM2_KSTH.Controllers.Grade
         }
 
 
+        [Authorize(Roles = "Teachers")]
         [HttpGet]
         public async Task<IActionResult> ListStudents(int classId)
         {
@@ -87,6 +95,8 @@ namespace ASM2_KSTH.Controllers.Grade
             ViewData["ClassId"] = classId;
             return View(students);
         }
+
+        [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Edit(int id, int classId)
         {
             var grade = await _context.Grades.FindAsync(id);
@@ -148,6 +158,7 @@ namespace ASM2_KSTH.Controllers.Grade
             return View(model);
         }
 
+        [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Delete(int id)
         {
             var grade = await _context.Grades.FindAsync(id);

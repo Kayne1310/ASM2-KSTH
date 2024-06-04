@@ -15,5 +15,6 @@ public partial class Grade
 
     public virtual Course? Course { get; set; }
 
-    public virtual Enrollment? Enrollment { get; set; }
+    public virtual Enrollment ? Enrollment { get; set; }
+    
 }
