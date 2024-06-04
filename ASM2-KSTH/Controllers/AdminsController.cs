@@ -12,6 +12,7 @@ using AutoMapper;
 using ASM2_KSTH.Helpers;
 using static System.Net.Mime.MediaTypeNames;
 
+
 namespace ASM2_KSTH.Controllers
 {
     public class AdminsController : Controller
@@ -33,7 +34,8 @@ namespace ASM2_KSTH.Controllers
             ViewData["ReturnUrl"] = ReturnUrl;
             return View();
         }
-        
+
+        [Authorize(Roles = "Admins")]
         public IActionResult AdminPage()
         {
             return View();
@@ -197,6 +199,58 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
 
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> AddStudent()
+        {
+            var students = await _context.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Class)
+                .Where(e => e.Student.Major.Courses.Any()) // Chỉ lấy sinh viên đã được ghi danh vào ít nhất một khóa học
+                .Select(e => new StudentViewModel
+                {
+                    StudentId = e.Student.StudentId,
+                    Name = e.Student.Name,
+                    ClassName = e.Class.ClassName,
+                    CourseName = e.Class != null ? e.Class.Course.CourseName : null
+                })
+                .ToListAsync();
+
+            return View(students);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Add(int studentId, int classId)
+        {
+            var enrollment = new Enrollment { StudentId = studentId, ClassId = classId };
+            _context.Enrollments.Add(enrollment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("AddStudent", "Admins", new { classId = classId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add(int studentId)
+        {
+            var students = await _context.Students
+                .Select(s => new StudentViewModel
+                {
+                    StudentId = s.StudentId,
+                    Name = s.Name
+                })
+                .ToListAsync();
+
+            ViewBag.Classes = await _context.Classes.ToListAsync(); // Gán giá trị cho ViewBag.Classes
+
+            return View(students);
+        }
+
+
+        [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();

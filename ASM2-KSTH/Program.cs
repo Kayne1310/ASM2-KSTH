@@ -55,6 +55,7 @@ namespace ASM2_KSTH
                 name: "default",
                 pattern: "{controller=Admins}/{action=Index}/{id?}");
 
+
             app.Run();
         }
     }
