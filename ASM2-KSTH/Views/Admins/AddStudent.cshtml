@@ -1,16 +1,13 @@
 ﻿@model IEnumerable<ASM2_KSTH.ViewModels.StudentViewModel>
 
 @{
-    ViewData["Title"] = "ListStudents";
-    Layout = "~/Views/Shared/LayoutTeacher.cshtml";
+    ViewData["Title"] = "Add Student";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
 }
 
-@foreach(var student in Model)
-{
-    
+<h2>Add Student to Class</h2>
 
-    <p class="fw-bold fs-5" style="margin-bottom:15px">List Grade of Students of @student.ClassName</p>
-}
+
 
 <div class="card">
     <div class="card-body">
@@ -21,47 +18,34 @@
                         <th>Student ID</th>
                         <th>Name</th>
                         <th>Class Name</th>
-                        <th>Major Name</th>
-                        <th>Grade </th>
+                        <th>Course Name</th> <!-- Sửa Major thành Course Name -->
                         <th>Action</th>
-                       
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var student in Model)
                     {
-                       
                         <tr>
                             <td>@student.StudentId</td>
                             <td>@student.Name</td>
                             <td>@student.ClassName</td>
-                            <td>@student.MajorName</td>
-                            <td>@student.Grade1</td>
-                           
-
+                            <td>@student.CourseName</td> <!-- Sửa MajorName thành CourseName -->
                             <td>
-                                <a asp-action="Edit" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">
-                                    <button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
-                                        <i class="material-icons-outlined">cloud_upload</i> Edit
+                                <a asp-action="Add" asp-route-id="@student.StudentId" asp-route-studentId="@student.StudentId">
+                                    <button type="button" class="btn btn-outline-dark px-4 d-flex gap-2 me-2">
+                                        <i class="material-icons-outlined">cloud_upload</i> Add Class
                                     </button>
                                 </a>
-
-
-                                <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]">     <button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important"><i class="material-icons-outlined">delete</i> Delete</button></a>
-                                   
-
-                                
+     
                             </td>
                         </tr>
                     }
                 </tbody>
-               
             </table>
+         
             <p>
-                <a asp-controller="grades" asp-action="index"><button type="button" class="btn btn-warning px-5">Back</button> </a>
-                
+                <a asp-controller="Classes" asp-action="index"><button type="button" class="btn btn-warning px-5">Back</button></a>
             </p>
-
         </div>
     </div>
 
@@ -78,6 +62,4 @@
             });
         </script>
     }
-
-
-   
+</div>

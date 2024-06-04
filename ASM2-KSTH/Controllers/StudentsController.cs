@@ -61,8 +61,6 @@ namespace ASM2_KSTH.Controllers
             return View("Index", model);
         }
 
-
-
         [Authorize]
         public async Task<IActionResult> Logout()
         {

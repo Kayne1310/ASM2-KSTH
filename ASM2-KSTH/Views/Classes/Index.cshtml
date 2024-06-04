@@ -1,14 +1,21 @@
 ﻿@model IEnumerable<ASM2_KSTH.ViewModels.ClassViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
 
 <p class="fw-bold fs-5" style="margin-bottom:15px">List Information Classes</p>
 
 <div class="card-body">
     <div class="row row-cols-auto g-3">
         <div class="col">
-            <button type="button" class="btn ripple btn-primary px-5" style="margin-bottom:15px">Create Class</button>
+            <a asp-action="Create"><button type="button" class="btn ripple btn-primary px-5" style="margin-bottom:15px">Create Class</button></a>
         </div>
         <div class="col">
-            <button type="button" class="btn ripple btn-danger px-5">Add Student</button>
+            <a asp-action="AddStudent" asp-controller="Admins">   <button type="button" class="btn ripple btn-danger px-5">Add Student</button></a>
+        </div>
+        <div class="col">
+            <a asp-action="ListRoom"> <button type="button" class="btn ripple btn-danger px-5"> Room</button></a>
         </div>
     </div>
 </div>
@@ -47,9 +54,7 @@
                                 <a asp-controller="Classes" asp-action="Edit" asp-route-classId="@item.ClassId" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
                                     <i class="material-icons-outlined">cloud_upload</i> Edit
                                 </a>
-                                <a asp-controller="Classes" asp-action="Delete" asp-route-classId="@item.ClassId" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
-                                    <i class="material-icons-outlined">delete</i> Delete
-                                </a>
+                               
                             </td>
                         </tr>
                     }
@@ -75,3 +80,6 @@
         });
     </script>
 }
+
+
+
