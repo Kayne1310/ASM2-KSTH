@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ASM2_KSTH.Models.Course>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<h2>Select a Course</h2>
+
+@using (Html.BeginForm("Index", "Grades", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.Label("Select a Course:")
+        @Html.DropDownList("courseId", (SelectList)ViewData["Courses"], "Select Course", new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+}
+
+@if (ViewData.ContainsKey("Classes"))
+{
+    var classes = (SelectList)ViewData["Classes"];
+    <h2>Select a Class</h2>
+
+    @using (Html.BeginForm("ListStudents", "Grades", FormMethod.Post))
+    {
+        <div class="form-group">
+            @Html.Label("Select a Class:")
+            @Html.DropDownList("classId", classes, "Select Class", new { @class = "form-control" })
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    }
+}
+
+

@@ -9,18 +9,18 @@ namespace ASM2_KSTH.Data
 {
     public class ASM2_KSTHContext : DbContext
     {
-        public ASM2_KSTHContext (DbContextOptions<ASM2_KSTHContext> options)
+        public ASM2_KSTHContext(DbContextOptions<ASM2_KSTHContext> options)
             : base(options)
         {
         }
 
-        public DbSet<ASM2_KSTH.Models.Test> Test { get; set; } = default!;
+        public DbSet<ASM2_KSTH.Models.Admin> Ladmin { get; set; } = default!;
         public DbSet<Major> Majors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Class> Classes { get; set; }
-        public DbSet<Enrollments> Enrollments { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Room> Rooms { get; set; }
 
@@ -51,26 +51,8 @@ namespace ASM2_KSTH.Data
                 .WithOne(cl => cl.Teacher)
                 .HasForeignKey(cl => cl.TeacherId);
 
-            modelBuilder.Entity<Class>()
-                .HasOne(cl => cl.Room)
-                .WithMany(r => r.Classes)
-                .HasForeignKey(cl => cl.RoomId);
 
-            modelBuilder.Entity<Class>()
-                .HasMany(cl => cl.Enrollments)
-                .WithOne(e => e.Class)
-                .HasForeignKey(e => e.ClassId);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(s => s.Enrollments)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId);
-
-            modelBuilder.Entity<Enrollments>()
-                  .HasOne(e => e.Student)
-                  .WithMany(s => s.Enrollments)
-                  .HasForeignKey(e => e.StudentId)
-                  .OnDelete(DeleteBehavior.NoAction);
+       
 
             modelBuilder.Entity<Schedule>()
             .HasOne(s => s.Class)

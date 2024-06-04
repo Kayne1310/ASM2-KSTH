@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/LayoutKSTH.cshtml";
 }
 
 <h1>Details</h1>
@@ -20,7 +21,7 @@
             @Html.DisplayNameFor(model => model.Course)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.CName)
+            @Html.DisplayFor(model => model.Course.CourseName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Student)

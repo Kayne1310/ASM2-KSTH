@@ -22,8 +22,8 @@ namespace ASM2_KSTH.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index()
         {
-            var aSM2_KSTHContext = _context.Schedule.Include(s => s.Class).Include(s => s.Student);
-            return View(await aSM2_KSTHContext.ToListAsync());
+            var ASM2_KSTHContext = _context.Schedule.Include(s => s.Class).Include(s => s.Student);
+            return View(await ASM2_KSTHContext.ToListAsync());
         }
 
         // GET: Schedules/Details/5
