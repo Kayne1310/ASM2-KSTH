@@ -38,7 +38,12 @@ namespace ASM2_KSTH.Controllers
         {
             return View();
         }
-    
+
+        public IActionResult ListST()
+        {
+            return View();
+        }
+
 
         // POST: Admins
         [HttpPost]
@@ -194,10 +199,62 @@ namespace ASM2_KSTH.Controllers
             return View();
         }
 
-        #endregion
+		#endregion
 
+		#region List of Student
 
-        public async Task<IActionResult> Logout()
+		[HttpGet]
+		public async Task<IActionResult> ListST(int MajorId)
+		{
+			var students = await _context.Students
+				.Include(s => s.Major)
+				.Select(e => new StudentRegister
+				{
+					StudentId = e.StudentId,
+					Name = e.Name,
+					DateOfBirth = e.DateOfBirth,
+					Address = e.Address,
+					PhoneNumber = e.PhoneNumber,
+					Email = e.Email,
+					MajorName = e.Major.MajorName,
+				})
+				.ToListAsync();
+			ViewData["MajorId"] = MajorId;
+			return View(students);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ListST(int MajorId, string actionType)
+		{
+			// Kiểm tra actionType để xác định hành động cần thực hiện
+			switch (actionType)
+			{
+				case "list":
+					var students = await _context.Students
+						.Include(s => s.Major)
+						.Where(e => e.MajorId == MajorId)
+						.Select(e => new StudentRegister
+						{
+							StudentId = e.StudentId,
+							Name = e.Name,
+							DateOfBirth = e.DateOfBirth,
+							Address = e.Address,
+							PhoneNumber = e.PhoneNumber,
+							Email = e.Email,
+							MajorName = e.Major.MajorName,
+						})
+						.ToListAsync();
+					    return View("ListStudents", students); // return the view with student list
+
+				        // Thêm các trường hợp khác tương ứng với các actionType khác nhau
+
+				default:
+					return BadRequest("Invalid action type"); // return bad request if actionType is not expected
+			}
+		}
+
+		#endregion
+		public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
             return Redirect("/");
