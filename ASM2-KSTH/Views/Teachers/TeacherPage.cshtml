@@ -1,15 +1,11 @@
-﻿@model ASM2_KSTH.Models.Student;
-
+﻿@model ASM2_KSTH.Models.Teacher;
 
 @{
-    ViewData["Title"] = "StudentPage";
+    ViewData["Title"] = "TeacherPage";
     Layout = null;
 }
 
-<h1>StudentPage</h1>
-
-
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,7 +21,7 @@
 </head>
 <body>
     <header>
-        <a asp-controller="Students" asp-action="ProfileST" class="logo">  Profile  </a>
+        <a asp-controller="Teachers" asp-action="ProfileTE" class="logo">  Profile  </a>
         <nav id="home">
             <ul>
                 <p>KST University Management System Online</p>
@@ -195,4 +191,5 @@
     </main>
 </body>
 </html>
+
 

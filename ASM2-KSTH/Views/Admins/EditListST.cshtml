@@ -9,7 +9,7 @@
 
 <form asp-action="EditListST" method="post">
     <input type="hidden" asp-for="StudentId" />
-    <input type="hidden" name="majorId" value="@ViewBag.MajorId" />
+    <input type="hidden" asp-for="StudentId"  name="majorId" value="@ViewBag.MajorId" />
 
     <div class="form-group">
         <label asp-for="Name" class="control-label" style="margin-bottom:15px">Name</label>
