@@ -66,7 +66,9 @@ namespace ASM2_KSTH.Controllers.Grade
                     Name = e.Student.Name,
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
-                    Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null
+                    Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
+                    EnrollmentId = e.Id,
+                    GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null
                 })
                 .ToListAsync();
 
@@ -77,7 +79,7 @@ namespace ASM2_KSTH.Controllers.Grade
         [HttpPost]
         public async Task<IActionResult> ListStudents(int classId, string actionType)
         {
-            var students = await _context.Enrollments
+                var students = await _context.Enrollments
                 .Include(e => e.Student)
                 .ThenInclude(s => s.Major)
                 .ThenInclude(c => c.Courses)
@@ -89,12 +91,17 @@ namespace ASM2_KSTH.Controllers.Grade
                     Name = e.Student.Name,
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
-                    Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null
+                    Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
+                    CourseId = e.Class.CourseId.HasValue ? e.Class.CourseId.Value : 0,
+                    EnrollmentId = e.Id,
+                    GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null 
                 })
                 .ToListAsync();
             ViewData["ClassId"] = classId;
+            
             return View(students);
         }
+
 
         [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Edit(int id, int classId)
@@ -114,7 +121,7 @@ namespace ASM2_KSTH.Controllers.Grade
                 Classes = _context.Classes.ToList()
             };
 
-            
+
             ViewData["ClassId"] = classId;
 
             return View(model);
@@ -129,45 +136,90 @@ namespace ASM2_KSTH.Controllers.Grade
                 return NotFound();
             }
 
-            
-                try
-                {
-                    var grade = await _context.Grades.FindAsync(id);
-                    if (grade == null)
-                    {
-                        return NotFound();
-                    }
 
-                    grade.Grade1 = model.Grade1;
-                    _context.Update(grade);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction("ListStudents", new { classId = classId });
-                }
-                catch (DbUpdateConcurrencyException)
+            try
+            {
+                var grade = await _context.Grades.FindAsync(id);
+                if (grade == null)
                 {
-                    ModelState.AddModelError("", "Unable to save changes. The grade was updated or deleted by another user.");
+                    return NotFound();
                 }
-             
+
+                grade.Grade1 = model.Grade1;
+                _context.Update(grade);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("ListStudents", new { classId = classId });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. The grade was updated or deleted by another user.");
+            }
+
 
             model.Students = _context.Students.ToList();
             model.Courses = _context.Courses.ToList();
             model.Classes = _context.Classes.ToList();
-            
+
             ViewData["ClassId"] = classId;
             return View(model);
         }
 
+
+
         [Authorize(Roles = "Teachers")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Add(int id, int classId, int? studentId, int courseId, int enrollmentId)
         {
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null)
+            var student = await _context.Students.FindAsync(id);
+            var classes = _context.Classes.ToList();
+
+            // Nếu không tìm thấy sinh viên, tạo một đối tượng Grade mới để thêm điểm
+     
+
+          
+
+            // Nếu tìm thấy sinh viên, trả về View để sửa điểm
+            var editModel = new GradesViewModels
             {
-                return NotFound();
+                SelectedStudentId =id,
+                StudentName = student.Name,
+                Classes = classes,
+                SelectedCourseId = courseId,
+                SelectedEnrollmentId = enrollmentId
+            };
+
+            ViewData["ClassId"] = classId;
+            return View(editModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(int id, GradesViewModels model, int classId, int? studentId, int courseId, int enrollmentId)
+        {
+            try
+            {
+                // Nếu tìm thấy học sinh, thêm điểm cho học sinh đó
+                var newGrade = new ASM2_KSTH.Models.Grade
+                {
+                    Grade1 = model.Grade1,
+                    CourseId = courseId,
+                    EnrollmentId = enrollmentId
+                };
+
+                _context.Add(newGrade);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("ListStudents", new { classId = classId });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. The grade was updated or deleted by another user.");
             }
 
-            return View(grade);
+            // Nếu có lỗi xảy ra, trả về View với model và dữ liệu cần thiết
+            model.Students = _context.Students.ToList();
+            model.Classes = _context.Classes.ToList();
+            ViewData["ClassId"] = classId;
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -182,6 +234,8 @@ namespace ASM2_KSTH.Controllers.Grade
             }
             return RedirectToAction(nameof(Index));
         }
+
+
     }
 
 }

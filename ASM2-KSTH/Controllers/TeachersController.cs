@@ -73,7 +73,7 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Grades");
                     }
         
 
