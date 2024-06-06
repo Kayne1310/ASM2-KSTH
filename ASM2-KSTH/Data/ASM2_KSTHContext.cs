@@ -26,10 +26,7 @@ namespace ASM2_KSTH.Data
         public DbSet<Roles> Roles { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=YUNO\\SQLEXPRESS;Initial Catalog=KSTH;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
-        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -82,10 +79,15 @@ namespace ASM2_KSTH.Data
                     .WithMany()
                     .HasForeignKey(e => e.RoleId)
                     .IsRequired();
-            });
 
-            // Cấu hình bảng Teacher
-            modelBuilder.Entity<Teacher>(entity =>
+                entity.HasOne(e => e.Major)
+				    .WithMany(m => m.Students)
+					.HasForeignKey(s => s.MajorId)
+                    .IsRequired();
+			});
+
+			// Cấu hình bảng Teacher
+			modelBuilder.Entity<Teacher>(entity =>
             {
                 entity.HasKey(e => e.TeacherId);
                 entity.Property(e => e.Name)

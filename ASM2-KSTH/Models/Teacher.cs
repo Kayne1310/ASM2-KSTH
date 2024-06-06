@@ -19,8 +19,8 @@ namespace ASM2_KSTH.Models;
         public string? Address { get; set; }
 
         [Display(Name = "Email")]
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Incorrect email format")]
+        //[Required(ErrorMessage = "Email is required")]
+        //[EmailAddress(ErrorMessage = "Incorrect email format")]
         public string? Email { get; set; }
 
         [Display(Name = "Phone number")]

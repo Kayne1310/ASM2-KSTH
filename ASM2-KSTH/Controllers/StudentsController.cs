@@ -78,7 +78,9 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
 
+        [Authorize]
         [Authorize(Roles = "Students")]
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
