@@ -265,6 +265,18 @@ namespace ASM2_KSTH.Controllers
             var student = await _context.Students
                 .Include(s => s.Major)
                 .Include(s => s.Roles)
+                .Select(e => new Student
+                   {
+                       StudentId = e.StudentId,
+                       Name = e.Name,
+                       DateOfBirth = e.DateOfBirth,
+                       Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                       Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                       PhoneNumber = e.PhoneNumber,
+                       Username = e.Username,
+                       Password = e.Password,
+                       MajorId = e.MajorId,
+                   })
                 .FirstOrDefaultAsync(s => s.StudentId == id);
             if (student == null)
             {
@@ -300,8 +312,24 @@ namespace ASM2_KSTH.Controllers
             }
                 try
                 {
-                    var student = await _context.Students.FindAsync(id);
-                    if (student == null)
+                var student = await _context.Students // Gọi chay dữ liệu (điều kiện khi 1 trường Null)
+                     .Include(s => s.Roles)
+                     .Select(e => new Student
+                     {
+                         StudentId = e.StudentId,
+                         Name = e.Name,
+                         DateOfBirth = e.DateOfBirth,
+                         Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                         Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                         PhoneNumber = e.PhoneNumber,
+                         Username = e.Username,
+                         Password = e.Password,
+                         RandomKey = e.RandomKey,
+                         MajorId = e.MajorId,
+                         RoleId = e.RoleId,
+                     })
+                     .FirstOrDefaultAsync(s => s.StudentId == id);
+                if (student == null)
                     {
                         return NotFound();
                     }
@@ -390,9 +418,9 @@ namespace ASM2_KSTH.Controllers
 				{
 					TeacherId = e.TeacherId,
 					Name = e.Name,
-					Address = e.Address,
-					Email = e.Email,
-					PhoneNumber = e.PhoneNumber,
+                    Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                    Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                    PhoneNumber = e.PhoneNumber,
 				})
 				.ToListAsync();
 			    return View(teachers);
@@ -432,7 +460,15 @@ namespace ASM2_KSTH.Controllers
 		{
 			var teacher = await _context.Teachers
 				.Include(s => s.Roles)
-				.FirstOrDefaultAsync(s => s.TeacherId == id);
+                .Select(e => new Teacher
+                {
+                    TeacherId = e.TeacherId,
+                    Name = e.Name,
+                    Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                    Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                    PhoneNumber = e.PhoneNumber,
+                })
+                .FirstOrDefaultAsync(s => s.TeacherId == id);
 			if (teacher == null)
 			{
 				return NotFound();
@@ -442,9 +478,9 @@ namespace ASM2_KSTH.Controllers
 			{
 				TeacherId = teacher.TeacherId,
 				Name = teacher.Name,
-				Address = teacher.Address,
-				Email = teacher.Email,
-				PhoneNumber = teacher.PhoneNumber,
+                Address = teacher.Address,
+                Email = teacher.Email,      
+                PhoneNumber = teacher.PhoneNumber,
 
 			};
 			ViewBag.RoleId = new SelectList(_context.Roles, "RoleId", "RoleName", teacher.RoleId);
@@ -462,8 +498,23 @@ namespace ASM2_KSTH.Controllers
 			}
 			try
 			{
-				var teacher = await _context.Teachers.FindAsync(id);
-				if (teacher == null)
+                var teacher = await _context.Teachers // Gọi chay dữ liệu (điều kiện khi 1 trường Null)
+                    .Include(s => s.Roles)
+                    .Select(e => new Teacher
+                    {
+                        TeacherId = e.TeacherId,
+                        Name = e.Name,
+                        Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                        Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                        PhoneNumber = e.PhoneNumber,
+                        Username = e.Username,
+                        Password = e.Password,
+                        RandomKey = e.RandomKey,
+                        RoleId = e.RoleId,
+                    })
+                    .FirstOrDefaultAsync(s => s.TeacherId == id);
+
+                if (teacher == null)
 				{
 					return NotFound();
 				}
