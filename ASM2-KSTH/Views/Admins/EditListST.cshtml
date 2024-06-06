@@ -1,0 +1,52 @@
+﻿@model ASM2_KSTH.ViewModels.StudentRegister
+
+@{
+    ViewData["Title"] = "EditListST";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<p class="fw-bold fs-5" style="margin-bottom:15px">Edit Student</p>
+
+<form asp-action="EditListST" method="post">
+    <input type="hidden" asp-for="StudentId" />
+    <input type="hidden" name="majorId" value="@ViewBag.MajorId" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label" style="margin-bottom:15px">Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateOfBirth" class="control-label" style="margin-bottom:15px">Date Of Birth</label>
+        <input asp-for="DateOfBirth" class="form-control" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address" class="control-label" style="margin-bottom:15px">Address</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber" class="control-label" style="margin-bottom:15px">Phone Number</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label" style="margin-bottom:15px">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MajorName" class="control-label" style="margin-bottom:15px">Major</label>
+        <select asp-for="MajorName" class="form-control" asp-items="ViewBag.MajorName"></select>
+        <span asp-validation-for="MajorName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" style="margin-top:15px" />
+    </div>
+</form>
