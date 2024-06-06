@@ -1,27 +1,27 @@
-﻿@model IEnumerable<ASM2_KSTH.ViewModels.StudentViewModel>
+﻿@model ASM2_KSTH.ViewModels.StudentViewModel
+
+@{
+    ViewData["Title"] = "Add Student to Class";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
 
 <h2>Add Student to Class</h2>
 
 <form asp-action="Add" method="post">
     <div class="form-group">
-        <label for="studentId">Select Student:</label>
-        <select class="form-control" id="studentId" name="studentId">
-            @foreach (var student in Model)
-            {
-                <option value="@student.StudentId">@student.Name</option>
-            }
-        </select>
+        <label for="studentName">Student Name:</label>
+        <input type="hidden" id="studentId" name="studentId" value="@ViewBag.Student.StudentId" />
+        <p id="studentName">@ViewBag.Student.Name</p>
     </div>
 
     <div class="form-group">
         <label for="classId">Select Class:</label>
         <select class="form-control" id="classId" name="classId">
-            @foreach (var @class in ViewBag.Classes as List<Class>)
+            @foreach (var @class in ViewBag.Classes as List<ASM2_KSTH.Models.Class>)
             {
                 <option value="@(@class.ClassId)">@(@class.ClassName)</option>
             }
         </select>
-
     </div>
 
     <button type="submit" class="btn btn-primary">Add Student to Class</button>

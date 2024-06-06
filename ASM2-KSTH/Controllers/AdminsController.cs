@@ -42,10 +42,18 @@ namespace ASM2_KSTH.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Dashboard()
+        {
+            return View();
+        }
+    
+
+
         public IActionResult ListST()
         {
             return View();
         }
+
 
 
         // POST: Admins
@@ -85,7 +93,7 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("AdminPage", "Admins");
+                        return RedirectToAction("DashBoard", "Admins");
                     }
                 }
                 return View();
@@ -583,19 +591,17 @@ namespace ASM2_KSTH.Controllers
         [HttpGet]
         public async Task<IActionResult> ListStudentToClass()
         {
-            var students = await _context.Enrollments
-                .Include(e => e.Student)
-                .Include(e => e.Class)
-                .Where(e => e.Student.Major.Courses.Any()) // Chỉ lấy sinh viên đã được ghi danh vào ít nhất một khóa học
-                .Select(e => new StudentViewModel
+                    var students = await _context.Students
+                .Include(s => s.Major)
+                .ThenInclude(m => m.Courses)
+                .Where(s => !s.Enrollments.Any()) 
+                .Select(s => new StudentViewModel
                 {
-                    StudentId = e.Student.StudentId,
-                    Name = e.Student.Name,
-                    ClassName = e.Class.ClassName,
-                    CourseName = e.Class != null ? e.Class.Course.CourseName : null
+                    StudentId = s.StudentId,
+                    Name = s.Name,
+               
                 })
-                .ToListAsync();
-
+        .ToListAsync();
             return View(students);
         }
         #endregion
@@ -610,21 +616,27 @@ namespace ASM2_KSTH.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("AddStudent", "Admins", new { classId = classId });
         }
-
         [HttpGet]
         public async Task<IActionResult> AddStudentToClass(int studentId)
         {
-            var students = await _context.Students
+            var student = await _context.Students
+                .Where(s => s.StudentId == studentId)
                 .Select(s => new StudentViewModel
                 {
                     StudentId = s.StudentId,
                     Name = s.Name
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
-            ViewBag.Classes = await _context.Classes.ToListAsync(); // Gán giá trị cho ViewBag.Classes
+            if (student == null)
+            {
+                return NotFound();
+            }
 
-            return View(students);
+            ViewBag.Student = student; // Truyền thông tin sinh viên vào ViewBag
+            ViewBag.Classes = await _context.Classes.ToListAsync(); // Truyền danh sách lớp học vào ViewBag
+
+            return View();
         }
         #endregion 
 

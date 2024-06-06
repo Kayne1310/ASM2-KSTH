@@ -78,7 +78,11 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
+
+                     
+
                         return RedirectToAction("TeacherPage", "Teachers");
+
                     }
 
                 }

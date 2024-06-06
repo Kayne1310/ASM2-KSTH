@@ -1,0 +1,22 @@
+﻿@model ASM2_KSTH.ViewModels.GradesViewModels
+
+<h2>Add Grade</h2>
+
+<form asp-action="Add" method="post">
+    <input type="hidden" name="CourseId" value="@Model.SelectedCourseId" />
+    <input type="hidden" name="EnrollmentId" value="@Model.SelectedEnrollmentId" />
+    <input type="hidden" name="ClassId" value="@ViewData["ClassId"]" />
+    <input type="hidden" name="SelectedStudentId" value="@Model.SelectedStudentId" />
+
+    <div class="form-group">
+        <label for="studentName">Student:</label>
+        <input type="text" class="form-control" id="studentName" name="StudentName" value="@Model.StudentName" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="grade1">Grade:</label>
+        <input type="text" class="form-control" id="grade1" name="Grade1" value="@Model.Grade1" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
