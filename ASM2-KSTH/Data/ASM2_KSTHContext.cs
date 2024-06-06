@@ -79,10 +79,15 @@ namespace ASM2_KSTH.Data
                     .WithMany()
                     .HasForeignKey(e => e.RoleId)
                     .IsRequired();
-            });
 
-            // Cấu hình bảng Teacher
-            modelBuilder.Entity<Teacher>(entity =>
+                entity.HasOne(e => e.Major)
+				    .WithMany(m => m.Students)
+					.HasForeignKey(s => s.MajorId)
+                    .IsRequired();
+			});
+
+			// Cấu hình bảng Teacher
+			modelBuilder.Entity<Teacher>(entity =>
             {
                 entity.HasKey(e => e.TeacherId);
                 entity.Property(e => e.Name)

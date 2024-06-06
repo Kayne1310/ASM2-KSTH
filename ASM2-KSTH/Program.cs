@@ -17,8 +17,9 @@ namespace ASM2_KSTH
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-
                 options.LoginPath = "/Admins/Index";
+                options.LoginPath = "/Teachers/Index";
+                options.LoginPath = "/Students/Index";
                 options.AccessDeniedPath = "/AccessDenied";
             });
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -53,7 +54,7 @@ namespace ASM2_KSTH
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Admins}/{action=Index}/{id?}");
+                pattern: "{controller=Students}/{action=Index}/{id?}");
 
 
             app.Run();
