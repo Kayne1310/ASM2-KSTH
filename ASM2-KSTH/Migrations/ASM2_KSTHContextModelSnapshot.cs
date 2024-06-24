@@ -171,6 +171,43 @@ namespace ASM2_KSTH.Migrations
                 b.ToTable("Rooms");
             });
 
+            modelBuilder.Entity("ASM2_KSTH.Models.Schedule", b =>
+                {
+                    b.Property<int>("ScheduleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleID"));
+
+                    b.Property<int>("ClassID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Day")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("StudentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScheduleID");
+
+                    b.HasIndex("ClassID");
+
+                    b.HasIndex("CourseID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("Schedule");
+                });
+
             modelBuilder.Entity("ASM2_KSTH.Models.Student", b =>
 
                 {
@@ -379,14 +416,13 @@ namespace ASM2_KSTH.Migrations
                 b.Navigation("Enrollment");
             });
 
-
-            modelBuilder.Entity("ASM2_KSTH.Models.StudentRegister", b =>
-                {
-                    b.HasOne("ASM2_KSTH.Models.Major", "Major")
-                        .WithMany("Students")
-                        .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("ASM2_KSTH.Models.Student", b =>
+            {
+                b.HasOne("ASM2_KSTH.Models.Major", "Major")
+                    .WithMany("Students")
+                    .HasForeignKey("MajorId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
 
                 b.Navigation("Major");
