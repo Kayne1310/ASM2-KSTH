@@ -1,0 +1,82 @@
+﻿@model ASM2_KSTH.ViewModels.ClassViewModel
+
+
+@{
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<h2>Edit Class</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div id="stepper3" class="bs-stepper gap-4 vertical linear">
+            <div class="bs-stepper-header" role="tablist">
+                <div class="step" data-target="#test-vl-3">
+                    <div class="step-trigger" role="tab" id="stepper3trigger3" aria-controls="test-vl-3" aria-selected="false" disabled="disabled">
+                        <div class="bs-stepper-circle"><i class="material-icons-outlined">auto_stories</i></div>
+                        <div class="">
+                            <h5 class="mb-0 steper-title">Education</h5>
+                            <p class="mb-0 steper-sub-title">Education Class</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bs-stepper-content">
+                <form asp-action="Edit" asp-route-classId="@Model.ClassId">
+                    <div id="test-vl-1" class="bs-stepper-pane content fade active dstepper-block" aria-labelledby="stepper3trigger1">
+                        <h5 class="mb-1">Your Class Information</h5>
+                        <p class="mb-4">Edit your Class information of KSTH University</p>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="ClassName" class="form-label">Class Name</label>
+                                <input asp-for="ClassName" class="form-control" />
+                                <span asp-validation-for="ClassName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="Year" class="form-label">Year</label>
+                                <input asp-for="Year" class="form-control" />
+                                <span asp-validation-for="Year" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="Room" class="form-label">Room</label>
+                                <select asp-for="Room" class="form-select" asp-items="ViewBag.Rooms"></select>
+                                <span asp-validation-for="Room" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="Teacher" class="form-label">Teacher</label>
+                                <select asp-for="Teacher" class="form-select" asp-items="ViewBag.Teachers"></select>
+                                <span asp-validation-for="Teacher" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="Semester" class="form-label">Semester</label>
+                                <select asp-for="Semester" class="form-select" asp-items="ViewBag.Semesters"></select>
+                                <span asp-validation-for="Semester" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="CourseName" class="form-label">CourseName</label>
+                                <select asp-for="CourseName" class="form-select" asp-items="ViewBag.Courses"></select>
+                                <span asp-validation-for="CourseName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="d-flex align-items-center gap-3">
+                                    <button type="submit" class="btn btn-primary px-4"><i class="bx bx-left-arrow-alt me-2"></i>Save</button>
+                                    <a asp-action="Index" class="btn btn-success px-4">Back to List</a>
+                                </div>
+                            </div>
+                        </div><!---end row-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

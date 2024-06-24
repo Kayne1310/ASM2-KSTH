@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Delete";
-    Layout = "~/Views/Shared/LayoutKSTH.cshtml";
 }
 
 <h1>Delete</h1>
@@ -19,16 +18,16 @@
             @Html.DisplayFor(model => model.Class.ClassId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseID)
+            @Html.DisplayNameFor(model => model.Course)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CourseID)
+            @Html.DisplayFor(model => model.Course.CourseId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Student)
+            @Html.DisplayNameFor(model => model.Room)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.StudentId)
+            @Html.DisplayFor(model => model.Room.RoomId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Day)

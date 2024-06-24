@@ -43,9 +43,6 @@ public partial class KsthContext : DbContext
             entity.Property(e => e.ClassName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.CourseName)
-                .HasMaxLength(100)
-                .IsUnicode(false);
             entity.Property(e => e.Semester)
                 .HasMaxLength(10)
                 .IsUnicode(false);
@@ -58,9 +55,6 @@ public partial class KsthContext : DbContext
                 .HasForeignKey(d => d.RoomId)
                 .HasConstraintName("FK__Classes__RoomId__4AB81AF0");
 
-            entity.HasOne(d => d.Teacher).WithMany(p => p.Classes)
-                .HasForeignKey(d => d.TeacherId)
-                .HasConstraintName("FK__Classes__Teacher__49C3F6B7");
         });
 
         modelBuilder.Entity<Course>(entity =>
@@ -106,7 +100,7 @@ public partial class KsthContext : DbContext
 
             entity.HasOne(d => d.Enrollment).WithMany(p => p.Grades)
                 .HasForeignKey(d => d.EnrollmentId)
-                .HasConstraintName("FK__Grades__Enrollme__6383C8BA");
+                .HasConstraintName("FK__Grades__Enrollmen__6383C8BA");
         });
 
         modelBuilder.Entity<Major>(entity =>
@@ -163,9 +157,7 @@ public partial class KsthContext : DbContext
             entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF2596466F262B6");
 
             entity.Property(e => e.TeacherId).ValueGeneratedNever();
-            entity.Property(e => e.Department)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false);

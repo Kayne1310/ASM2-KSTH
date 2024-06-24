@@ -1,4 +1,6 @@
 ﻿using System;
+
+
 namespace ASM2_KSTH.ViewModels
 {
     public class StudentViewModel
@@ -14,5 +16,7 @@ namespace ASM2_KSTH.ViewModels
         public string? MajorName { get; set; }
         public decimal? Grade1 { get; set; }
 
+        public string? CourseName {  get; set; }
+        public string? ClassName { get; set; }
     }
 }

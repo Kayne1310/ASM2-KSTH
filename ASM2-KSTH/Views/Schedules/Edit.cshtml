@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/LayoutKSTH.cshtml";
 }
 
 <h1>Edit</h1>
@@ -15,19 +14,19 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ScheduleID" />
             <div class="form-group">
-                <label asp-for="ClassID" class="control-label"></label>
-                <select asp-for="ClassID" class="form-control" asp-items="ViewBag.ClassID"></select>
-                <span asp-validation-for="ClassID" class="text-danger"></span>
+                <label asp-for="ClassId" class="control-label"></label>
+                <select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId"></select>
+                <span asp-validation-for="ClassId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StudentID" class="control-label"></label>
-                <select asp-for="StudentID" class="form-control" asp-items="ViewBag.StudentID"></select>
-                <span asp-validation-for="StudentID" class="text-danger"></span>
+                <label asp-for="CourseId" class="control-label"></label>
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CourseID" class="control-label"></label>
-                <input asp-for="CourseID" class="form-control" />
-                <span asp-validation-for="CourseID" class="text-danger"></span>
+                <label asp-for="RoomId" class="control-label"></label>
+                <select asp-for="RoomId" class="form-control" asp-items="ViewBag.RoomId"></select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Day" class="control-label"></label>
@@ -55,4 +54,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

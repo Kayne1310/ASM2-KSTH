@@ -22,8 +22,8 @@ namespace ASM2_KSTH.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index()
         {
-            var ASM2_KSTHContext = _context.Schedule.Include(s => s.Class).Include(s => s.Student);
-            return View(await ASM2_KSTHContext.ToListAsync());
+            var aSM2_KSTHContext = _context.Schedule_1.Include(s => s.Class).Include(s => s.Course).Include(s => s.Room);
+            return View(await aSM2_KSTHContext.ToListAsync());
         }
 
         // GET: Schedules/Details/5
@@ -34,9 +34,10 @@ namespace ASM2_KSTH.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedule
+            var schedule = await _context.Schedule_1
                 .Include(s => s.Class)
-                .Include(s => s.Student)
+                .Include(s => s.Course)
+                .Include(s => s.Room)
                 .FirstOrDefaultAsync(m => m.ScheduleID == id);
             if (schedule == null)
             {
@@ -49,8 +50,9 @@ namespace ASM2_KSTH.Controllers
         // GET: Schedules/Create
         public IActionResult Create()
         {
-            ViewData["ClassID"] = new SelectList(_context.Classes, "ClassId", "ClassId");
-            ViewData["StudentID"] = new SelectList(_context.Students, "StudentId", "StudentId");
+            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId");
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "RoomId");
             return View();
         }
 
@@ -59,7 +61,7 @@ namespace ASM2_KSTH.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ScheduleID,ClassID,StudentID,CourseID,Day,StartTime,EndTime")] Schedule schedule)
+        public async Task<IActionResult> Create([Bind("ScheduleID,ClassId,CourseId,RoomId,Day,StartTime,EndTime")] Schedule schedule)
         {
             if (ModelState.IsValid)
             {
@@ -67,8 +69,9 @@ namespace ASM2_KSTH.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassID"] = new SelectList(_context.Classes, "ClassId", "ClassId", schedule.ClassID);
-            ViewData["StudentID"] = new SelectList(_context.Students, "StudentId", "StudentId", schedule.StudentID);
+            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", schedule.ClassId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", schedule.CourseId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "RoomId", schedule.RoomId);
             return View(schedule);
         }
 
@@ -80,13 +83,14 @@ namespace ASM2_KSTH.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedule.FindAsync(id);
+            var schedule = await _context.Schedule_1.FindAsync(id);
             if (schedule == null)
             {
                 return NotFound();
             }
-            ViewData["ClassID"] = new SelectList(_context.Classes, "ClassId", "ClassId", schedule.ClassID);
-            ViewData["StudentID"] = new SelectList(_context.Students, "StudentId", "StudentId", schedule.StudentID);
+            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", schedule.ClassId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", schedule.CourseId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "RoomId", schedule.RoomId);
             return View(schedule);
         }
 
@@ -95,7 +99,7 @@ namespace ASM2_KSTH.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ScheduleID,ClassID,StudentID,CourseID,Day,StartTime,EndTime")] Schedule schedule)
+        public async Task<IActionResult> Edit(int id, [Bind("ScheduleID,ClassId,CourseId,RoomId,Day,StartTime,EndTime")] Schedule schedule)
         {
             if (id != schedule.ScheduleID)
             {
@@ -122,8 +126,9 @@ namespace ASM2_KSTH.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassID"] = new SelectList(_context.Classes, "ClassId", "ClassId", schedule.ClassID);
-            ViewData["StudentID"] = new SelectList(_context.Students, "StudentId", "StudentId", schedule.StudentID);
+            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", schedule.ClassId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", schedule.CourseId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "RoomId", "RoomId", schedule.RoomId);
             return View(schedule);
         }
 
@@ -135,9 +140,10 @@ namespace ASM2_KSTH.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedule
+            var schedule = await _context.Schedule_1
                 .Include(s => s.Class)
-                .Include(s => s.Student)
+                .Include(s => s.Course)
+                .Include(s => s.Room)
                 .FirstOrDefaultAsync(m => m.ScheduleID == id);
             if (schedule == null)
             {
@@ -152,10 +158,10 @@ namespace ASM2_KSTH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var schedule = await _context.Schedule.FindAsync(id);
+            var schedule = await _context.Schedule_1.FindAsync(id);
             if (schedule != null)
             {
-                _context.Schedule.Remove(schedule);
+                _context.Schedule_1.Remove(schedule);
             }
 
             await _context.SaveChangesAsync();
@@ -164,7 +170,7 @@ namespace ASM2_KSTH.Controllers
 
         private bool ScheduleExists(int id)
         {
-            return _context.Schedule.Any(e => e.ScheduleID == id);
+            return _context.Schedule_1.Any(e => e.ScheduleID == id);
         }
     }
 }

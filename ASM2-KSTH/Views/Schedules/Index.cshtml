@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/LayoutKSTH.cshtml";
 }
 
 <h1>Index</h1>
@@ -20,12 +19,17 @@
                 @Html.DisplayNameFor(model => model.Course)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                @Html.DisplayNameFor(model => model.Room)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Day)
             </th>
-           
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -33,20 +37,23 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Class.ClassId)
+                @Html.DisplayFor(modelItem => item.Class.ClassName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Course.CourseName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.Name)
+                @Html.DisplayFor(modelItem => item.Room.RoomNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Day)
             </td>
-            
-        
-            
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ScheduleID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ScheduleID">Details</a> |
