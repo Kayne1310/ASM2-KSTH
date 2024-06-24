@@ -16,7 +16,11 @@ namespace ASM2_KSTH.ViewModels
         public string? MajorName { get; set; }
         public decimal? Grade1 { get; set; }
 
+        public int? GradeId { get; set; }
         public string? CourseName {  get; set; }
         public string? ClassName { get; set; }
+        public int CourseId { get; set; } // Thêm trường CourseId
+        public int EnrollmentId { get; set; } // Thêm trường EnrollmentId
     }
+
 }

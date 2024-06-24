@@ -66,6 +66,7 @@ namespace ASM2_KSTH.Data
             base.OnModelCreating(modelBuilder);
 
 
+
             modelBuilder.Entity<Schedule>()
             .HasOne(s => s.Class)
             .WithMany()
@@ -77,6 +78,7 @@ namespace ASM2_KSTH.Data
                 .WithMany()
                 .HasForeignKey(s => s.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Schedule>()
                 .HasOne(s => s.Course)

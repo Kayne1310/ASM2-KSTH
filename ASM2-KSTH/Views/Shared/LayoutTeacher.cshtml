@@ -31,7 +31,6 @@
     <link href="~/sass/responsive.css" rel="stylesheet">
 
 </head>
-
 <body>
 
     <!--start header-->
@@ -209,7 +208,7 @@
                         </a>
 
                         <hr class="dropdown-divider">
-                        <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;">
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-controller="Teachers" asp-action="Logout">
                             <i class="material-icons-outlined">power_settings_new</i>Logout
                         </a>
                     </div>
@@ -455,6 +454,7 @@
             </div>
         </div>
     </div>
+
     <script src="~/assets/js/jquery.min.js"></script>
     <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 
@@ -464,17 +464,19 @@
 
     <script src="~/assets/js/bootstrap.bundle.min.js"></script>
 
+    <script src="~/assets/plugins/apexchart/apexcharts.min.js"></script>
     <!--plugins-->
     <!--plugins-->
     <script src="~/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
     <script src="~/assets/plugins/metismenu/metisMenu.min.js"></script>
     <script src="~/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/assets/js/index.js"></script>
+    <script src="~/assets/plugins/peity/jquery.peity.min.js"></script>
     <script>
         $(".data-attributes span").peity("donut")
     </script>
     <script src="~/assets/plugins/simplebar/js/simplebar.min.js"></script>
     <script src="~/assets/js/main.js"></script>
-
 
 </body>
 

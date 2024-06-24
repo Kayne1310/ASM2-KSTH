@@ -11,6 +11,7 @@ using ASM2_KSTH.ViewModels;
 using AutoMapper;
 using ASM2_KSTH.Helpers;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace ASM2_KSTH.Controllers
@@ -40,7 +41,20 @@ namespace ASM2_KSTH.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> Dashboard()
+        {
+            return View();
+        }
     
+
+
+        public IActionResult ListST()
+        {
+            return View();
+        }
+
+
 
         // POST: Admins
         [HttpPost]
@@ -79,15 +93,15 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("AdminPage", "Admins");
+                        return RedirectToAction("DashBoard", "Admins");
                     }
                 }
                 return View();
         }
         #endregion
 
-        #region Register for Student
 
+        #region Register for Student
         [Authorize(Roles = "Admins")]
         [HttpGet]
         public IActionResult SignupST(string? ReturnUrl)
@@ -140,8 +154,8 @@ namespace ASM2_KSTH.Controllers
             }
             return View();
         }
-
         #endregion
+
 
         #region Register for Teacher
       
@@ -196,62 +210,439 @@ namespace ASM2_KSTH.Controllers
             return View();
         }
 
+		#endregion
+
+
+		#region List of Student
+		[HttpGet]
+		public async Task<IActionResult> ListStudent(int MajorId)
+		{
+			var students = await _context.Students
+				.Include(s => s.Major)
+				.Select(e => new StudentRegister
+				{
+					StudentId = e.StudentId,
+					Name = e.Name,
+					DateOfBirth = e.DateOfBirth,
+					Address = e.Address,
+					PhoneNumber = e.PhoneNumber,
+					Email = e.Email,
+					MajorName = e.Major.MajorName,
+				})
+				.ToListAsync();
+			ViewData["MajorId"] = MajorId;
+			return View(students);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ListStudent(int MajorId, string actionType)
+		{
+			// Kiểm tra actionType để xác định hành động cần thực hiện
+			switch (actionType)
+			{
+				case "list":
+					var students = await _context.Students
+						.Include(s => s.Major)
+						.Where(e => e.MajorId == MajorId)
+						.Select(e => new StudentRegister
+						{
+							StudentId = e.StudentId,
+							Name = e.Name,
+							DateOfBirth = e.DateOfBirth,
+							Address = e.Address,
+							PhoneNumber = e.PhoneNumber,
+							Email = e.Email,
+							MajorName = e.Major.MajorName,
+						})
+						.ToListAsync();
+					    return View("ListStudent", students); // return the view with student list
+
+				        // Thêm các trường hợp khác tương ứng với các actionType khác nhau
+
+				default:
+					return BadRequest("Invalid action type"); // return bad request if actionType is not expected
+			}
+		}
         #endregion
 
 
-
-
-
-
-
+        #region Edit list student
         [HttpGet]
-        public async Task<IActionResult> AddStudent()
+        public async Task<IActionResult> EditListST(int id)
         {
-            var students = await _context.Enrollments
-                .Include(e => e.Student)
-                .Include(e => e.Class)
-                .Where(e => e.Student.Major.Courses.Any()) // Chỉ lấy sinh viên đã được ghi danh vào ít nhất một khóa học
-                .Select(e => new StudentViewModel
-                {
-                    StudentId = e.Student.StudentId,
-                    Name = e.Student.Name,
-                    ClassName = e.Class.ClassName,
-                    CourseName = e.Class != null ? e.Class.Course.CourseName : null
-                })
-                .ToListAsync();
+            var student = await _context.Students
+                .Include(s => s.Major)
+                .Include(s => s.Roles)
+                .Select(e => new Student
+                   {
+                       StudentId = e.StudentId,
+                       Name = e.Name,
+                       DateOfBirth = e.DateOfBirth,
+                       Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                       Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                       PhoneNumber = e.PhoneNumber,
+                       Username = e.Username,
+                       Password = e.Password,
+                       MajorId = e.MajorId,
+                   })
+                .FirstOrDefaultAsync(s => s.StudentId == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
 
-            return View(students);
+            var model = new StudentRegister
+            {
+                StudentId = student.StudentId,
+                Name = student.Name,
+                DateOfBirth = student.DateOfBirth,
+                Address = student.Address,
+                PhoneNumber = student.PhoneNumber,
+                Email = student.Email,
+                MajorId = student.MajorId,
+                MajorName = student.Major?.MajorName,
+
+            };
+
+            ViewBag.MajorName = new SelectList(_context.Majors, "MajorName", "MajorName", student.Major?.MajorName);
+            ViewBag.RoleId = new SelectList(_context.Roles, "RoleId", "RoleName", student.RoleId);
+
+            return View(model);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> Add(int studentId, int classId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditListST(int id, StudentRegister model)
+        {
+            if (id != model.StudentId)
+            {
+                return NotFound();
+            }
+                try
+                {
+                var student = await _context.Students // Gọi chay dữ liệu (điều kiện khi 1 trường Null)
+                     .Include(s => s.Roles)
+                     .Select(e => new Student
+                     {
+                         StudentId = e.StudentId,
+                         Name = e.Name,
+                         DateOfBirth = e.DateOfBirth,
+                         Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                         Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                         PhoneNumber = e.PhoneNumber,
+                         Username = e.Username,
+                         Password = e.Password,
+                         RandomKey = e.RandomKey,
+                         MajorId = e.MajorId,
+                         RoleId = e.RoleId,
+                     })
+                     .FirstOrDefaultAsync(s => s.StudentId == id);
+                if (student == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Tìm MajorId dựa trên MajorName
+                    var major = await _context.Majors.FirstOrDefaultAsync(m => m.MajorName == model.MajorName);
+                    if (major == null)
+                    {
+                        ModelState.AddModelError("", "Invalid major selected.");
+                        ViewBag.MajorName = new SelectList(_context.Majors, "MajorName", "MajorName", model.MajorName);
+                        return View(model);
+                    }
+
+                    student.Name = model.Name;
+                    student.DateOfBirth = model.DateOfBirth;
+                    student.Address = model.Address;
+                    student.PhoneNumber = model.PhoneNumber;
+                    student.Email = model.Email;
+                    student.MajorId = major.MajorId; // Cập nhật MajorId dựa trên MajorName
+
+
+                    _context.Update(student);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("ListStudent","Admins");   
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. The student was updated or deleted by another user.");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"An error occurred while saving changes: {ex.Message}");
+                }
+            // Nếu có lỗi xảy ra, cần điền lại dữ liệu cho model để hiển thị lại view
+            ViewBag.MajorName = new SelectList(_context.Majors, "MajorName", "MajorName", model.MajorName);
+            ViewBag.RoleId = new SelectList(_context.Roles, "RoleId", "RoleName", model.RoleId);
+
+            return View(model);
+        }
+
+        #endregion
+
+
+        #region Delete All Info Student
+        [HttpGet]
+		public async Task<IActionResult> DeleteListST(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var student = await _context.Students
+				.Include(s => s.Major)
+				.Include(s => s.Roles)
+				.FirstOrDefaultAsync(m => m.StudentId == id);
+			if (student == null)
+			{
+				return NotFound();
+			}
+
+			return View(student);
+		}
+
+		[HttpPost, ActionName("DeleteListST")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmedST(int id)
+		{
+			var student = await _context.Students.FindAsync(id);
+			_context.Students.Remove(student);
+			await _context.SaveChangesAsync();
+			return RedirectToAction("ListStudent", "Admins");
+		}
+
+        #endregion
+
+
+        #region List of Teacher
+
+        [HttpGet]
+		public async Task<IActionResult> ListTeacher()
+		{
+			var teachers = await _context.Teachers
+				.Select(e => new Teacher
+				{
+					TeacherId = e.TeacherId,
+					Name = e.Name,
+                    Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                    Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                    PhoneNumber = e.PhoneNumber,
+				})
+				.ToListAsync();
+			    return View(teachers);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ListTeacher(string actionType)
+		{
+			// Kiểm tra actionType để xác định hành động cần thực hiện
+			switch (actionType)
+			{
+				case "list":
+					var teachers = await _context.Teachers
+						.Select(e => new Teacher
+						{
+							TeacherId = e.TeacherId,
+							Name = e.Name,
+							Address = e.Address,
+							Email = e.Email,
+							PhoneNumber = e.PhoneNumber,
+						})
+						.ToListAsync();
+					return View("ListTeacher", teachers); // return the view with student list
+
+				// Thêm các trường hợp khác tương ứng với các actionType khác nhau
+
+				default:
+					return BadRequest("Invalid action type"); // return bad request if actionType is not expected
+			}
+		}
+        #endregion
+
+
+        #region Edit list teacher
+        [HttpGet]        
+		public async Task<IActionResult> EditListTE(int id)
+		{
+			var teacher = await _context.Teachers
+				.Include(s => s.Roles)
+                .Select(e => new Teacher
+                {
+                    TeacherId = e.TeacherId,
+                    Name = e.Name,
+                    Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                    Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                    PhoneNumber = e.PhoneNumber,
+                })
+                .FirstOrDefaultAsync(s => s.TeacherId == id);
+			if (teacher == null)
+			{
+				return NotFound();
+			}
+
+			var model = new Teacher
+			{
+				TeacherId = teacher.TeacherId,
+				Name = teacher.Name,
+                Address = teacher.Address,
+                Email = teacher.Email,      
+                PhoneNumber = teacher.PhoneNumber,
+
+			};
+			ViewBag.RoleId = new SelectList(_context.Roles, "RoleId", "RoleName", teacher.RoleId);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditListTE(int id, Teacher model)
+		{
+			if (id != model.TeacherId)
+			{
+				return NotFound();
+			}
+			try
+			{
+                var teacher = await _context.Teachers // Gọi chay dữ liệu (điều kiện khi 1 trường Null)
+                    .Include(s => s.Roles)
+                    .Select(e => new Teacher
+                    {
+                        TeacherId = e.TeacherId,
+                        Name = e.Name,
+                        Address = e.Address != null ? e.Address : string.Empty,  // Xử lý giá trị null
+                        Email = e.Email != null ? e.Email : string.Empty,        // Xử lý giá trị null
+                        PhoneNumber = e.PhoneNumber,
+                        Username = e.Username,
+                        Password = e.Password,
+                        RandomKey = e.RandomKey,
+                        RoleId = e.RoleId,
+                    })
+                    .FirstOrDefaultAsync(s => s.TeacherId == id);
+
+                if (teacher == null)
+				{
+					return NotFound();
+				}
+
+				teacher.Name = model.Name;
+				teacher.Address = model.Address;
+				teacher.Email = model.Email;
+				teacher.PhoneNumber = model.PhoneNumber;
+
+				_context.Update(teacher);
+				await _context.SaveChangesAsync();
+
+				return RedirectToAction("ListTeacher", "Admins");
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				ModelState.AddModelError("", "Unable to save changes. The student was updated or deleted by another user.");
+			}
+			catch (Exception ex)
+			{
+				ModelState.AddModelError("", $"An error occurred while saving changes: {ex.Message}");
+			}
+			// Nếu có lỗi xảy ra, cần điền lại dữ liệu cho model để hiển thị lại view
+			ViewBag.RoleId = new SelectList(_context.Roles, "RoleId", "RoleName", model.RoleId);
+
+			return View(model);
+		}
+        #endregion
+
+
+        #region Delete All Info Teacher
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteListTE(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var teacher = await _context.Teachers
+                .Include(s => s.Roles)
+                .FirstOrDefaultAsync(m => m.TeacherId == id);
+            if (teacher == null)
+            {
+                return NotFound();
+            }
+
+            return View(teacher);
+        }
+
+        [HttpPost, ActionName("DeleteListTE")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmedTE(int id)
+        {
+            var teacher = await _context.Teachers.FindAsync(id);
+            _context.Teachers.Remove(teacher);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ListTeacher", "Admins");
+        }
+
+        #endregion
+
+
+        #region List student to class
+        [HttpGet]
+        public async Task<IActionResult> ListStudentToClass()
+        {
+                    var students = await _context.Students
+                .Include(s => s.Major)
+                .ThenInclude(m => m.Courses)
+                .Where(s => !s.Enrollments.Any()) 
+                .Select(s => new StudentViewModel
+                {
+                    StudentId = s.StudentId,
+                    Name = s.Name,
+               
+                })
+        .ToListAsync();
+            return View(students);
+        }
+        #endregion
+
+
+        #region Add student to class
+        [HttpPost]
+        public async Task<IActionResult> AddStudentToClass(int studentId, int classId)
         {
             var enrollment = new Enrollment { StudentId = studentId, ClassId = classId };
             _context.Enrollments.Add(enrollment);
             await _context.SaveChangesAsync();
             return RedirectToAction("AddStudent", "Admins", new { classId = classId });
         }
-
         [HttpGet]
-        public async Task<IActionResult> Add(int studentId)
+        public async Task<IActionResult> AddStudentToClass(int studentId)
         {
-            var students = await _context.Students
+            var student = await _context.Students
+                .Where(s => s.StudentId == studentId)
                 .Select(s => new StudentViewModel
                 {
                     StudentId = s.StudentId,
                     Name = s.Name
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
-            ViewBag.Classes = await _context.Classes.ToListAsync(); // Gán giá trị cho ViewBag.Classes
+            if (student == null)
+            {
+                return NotFound();
+            }
 
-            return View(students);
+            ViewBag.Student = student; // Truyền thông tin sinh viên vào ViewBag
+            ViewBag.Classes = await _context.Classes.ToListAsync(); // Truyền danh sách lớp học vào ViewBag
+
+            return View();
         }
-
+        #endregion 
 
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Logout()
+
         {
             await HttpContext.SignOutAsync();
             return Redirect("/");

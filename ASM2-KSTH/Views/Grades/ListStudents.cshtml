@@ -8,7 +8,7 @@
 
     
 
-    <p class="fw-bold fs-5" style="margin-bottom:15px">List Grade of Students of </p>
+    <p class="fw-bold fs-5" style="margin-bottom:15px">List Grade of Students of  </p>
 
 
 <div class="card">
@@ -39,19 +39,21 @@
                            
 
                             <td>
-                                <a asp-action="Edit" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
-                                 
+                                @if (student.Grade1 != null)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@student.GradeId" asp-route-classId="@ViewData["ClassId"]"  type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
                                         <i class="material-icons-outlined">cloud_upload</i> Edit
-                                    
-                                </a>
-
-
-                                <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
-
-                                    <i class="material-icons-outlined">delete</i> Delete
-                                  </a>
-                                   
-
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
+                                        <i class="material-icons-outlined">delete</i> Delete
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Add" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" asp-route-courseId="@student.CourseId" asp-route-enrollmentId="@student.EnrollmentId" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
+                                        <i class="material-icons-outlined">cloud_upload</i> Add
+                                    </a>
+                                }
                                 
                             </td>
                         </tr>
