@@ -7,6 +7,8 @@
 
 <p class="fw-bold fs-5" style="margin-bottom:15px">Edit Student</p>
 
+<div class="col-md-4">
+
 <form asp-action="EditListST" method="post">
     <input type="hidden" asp-for="StudentId" />
     <input type="hidden" asp-for="StudentId"  name="majorId" value="@ViewBag.MajorId" />
@@ -50,3 +52,4 @@
         <input type="submit" value="Save" class="btn btn-primary" style="margin-top:15px" />
     </div>
 </form>
+</div>
