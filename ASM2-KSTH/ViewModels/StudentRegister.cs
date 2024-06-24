@@ -22,7 +22,7 @@ namespace ASM2_KSTH.ViewModels
 		[Display(Name = "Address")]
 		[Required(ErrorMessage = "Address is required")]
 		[MaxLength(30, ErrorMessage = "Maximum 30 characters")]
-		public string Address { get; set; }
+		public string? Address { get; set; }
 
 		[Display(Name = "Phone number")]
 		[Required(ErrorMessage = "Phone number is required")]
@@ -33,7 +33,7 @@ namespace ASM2_KSTH.ViewModels
 		[Display(Name = "Email")]
 		[Required(ErrorMessage = "Email is required")]
 		[EmailAddress(ErrorMessage = "Incorrect email format")]
-		public string Email { get; set; }
+		public string? Email { get; set; }
 		public int MajorId { get; set; } // Foreign Key
 
 		[Required(ErrorMessage = "MajorName is required")]

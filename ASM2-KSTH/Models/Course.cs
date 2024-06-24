@@ -5,6 +5,7 @@ namespace ASM2_KSTH.Models;
 
 public partial class Course
 {
+
     public int CourseId { get; set; }
 
     public string? CourseName { get; set; }

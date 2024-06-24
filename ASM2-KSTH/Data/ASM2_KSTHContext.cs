@@ -24,8 +24,7 @@ namespace ASM2_KSTH.Data
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Roles> Roles { get; set; }
-
-
+        public object Schedule { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,51 +65,30 @@ namespace ASM2_KSTH.Data
 
             base.OnModelCreating(modelBuilder);
 
-            // Cấu hình bảng Student
-            modelBuilder.Entity<Student>(entity =>
-            {
-                entity.HasKey(e => e.StudentId);
-                entity.Property(e => e.Name)
-                    .HasMaxLength(100)
-                    .IsRequired(false);
 
-                // Cấu hình khóa ngoại
-                entity.HasOne(e => e.Roles)
-                    .WithMany()
-                    .HasForeignKey(e => e.RoleId)
-                    .IsRequired();
-            });
 
-            // Cấu hình bảng Teacher
-            modelBuilder.Entity<Teacher>(entity =>
-            {
-                entity.HasKey(e => e.TeacherId);
-                entity.Property(e => e.Name)
-                    .HasMaxLength(100)
-                    .IsRequired();
+            modelBuilder.Entity<Schedule>()
+            .HasOne(s => s.Class)
+            .WithMany()
+            .HasForeignKey(s => s.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-                // Cấu hình khóa ngoại
-                entity.HasOne(e => e.Roles)
-                    .WithMany()
-                    .HasForeignKey(e => e.RoleId)
-                    .IsRequired();
-            });
+            modelBuilder.Entity<Schedule>()
+                .HasOne(s => s.Room)
+                .WithMany()
+                .HasForeignKey(s => s.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Cấu hình bảng Admin
-            modelBuilder.Entity<Admin>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Username)
-                    .HasMaxLength(100)
-                    .IsRequired();
 
-                // Cấu hình khóa ngoại
-                entity.HasOne(e => e.Roles)
-                    .WithMany()
-                    .HasForeignKey(e => e.RoleId)
-                    .IsRequired();
-            });
+            modelBuilder.Entity<Schedule>()
+                .HasOne(s => s.Course)
+                .WithMany()
+                .HasForeignKey(s => s.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
+        public DbSet<ASM2_KSTH.Models.Schedule> Schedule_1 { get; set; } = default!;
+        
 
     }
 
