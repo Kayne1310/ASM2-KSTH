@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace ASM2_KSTH.Models;
 
 public partial class Class
@@ -17,8 +18,6 @@ public partial class Class
 
     public int? RoomId { get; set; }
 
-    public string? CourseName { get; set; }
-
     public string? ClassName { get; set; }
 
     public virtual Course? Course { get; set; }
@@ -28,4 +27,5 @@ public partial class Class
     public virtual Room? Room { get; set; }
 
     public virtual Teacher? Teacher { get; set; }
+
 }

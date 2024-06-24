@@ -2,32 +2,56 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutTeacher.cshtml";
 }
 
 
 
-<h2>Select a Course</h2>
+
+<p class="fw-bold fs-5" style="margin-bottom:15px">Select Courses</p>
 
 @using (Html.BeginForm("Index", "Grades", FormMethod.Post))
 {
     <div class="form-group">
-        @Html.Label("Select a Course:")
-        @Html.DropDownList("courseId", (SelectList)ViewData["Courses"], "Select Course", new { @class = "form-control", onchange = "this.form.submit();" })
+
+        <!-- Form start -->
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+               
+                <!-- Dropdown list with ViewData data -->
+                @Html.DropDownList(
+                         "courseId",
+                         (SelectList)ViewData["Courses"],
+                         "Choose Course",
+                         new
+                         {
+                             @id = "bsValidation11",
+                             @class = "form-select",
+                             @required = "required",
+                             onchange = "this.form.submit();"
+                             
+                         }
+                         )
+            </div>
+        }
     </div>
+    
+
 }
 
 @if (ViewData.ContainsKey("Classes"))
 {
     var classes = (SelectList)ViewData["Classes"];
-    <h2>Select a Class</h2>
+    <p class="fw-bold fs-5" style="margin-bottom:15px;margin-top:15px">Select Classes</p>
 
     @using (Html.BeginForm("ListStudents", "Grades", FormMethod.Post))
     {
         <div class="form-group">
-            @Html.Label("Select a Class:")
-            @Html.DropDownList("classId", classes, "Select Class", new { @class = "form-control" })
+           
+            @Html.DropDownList("classId", classes, "Choose Class", new { @class = "form-control" })
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" style="margin-top:15px">Submit</button>
     }
 }
 

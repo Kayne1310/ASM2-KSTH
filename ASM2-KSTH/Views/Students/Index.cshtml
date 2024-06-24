@@ -1,6 +1,5 @@
 ﻿@model ASM2_KSTH.Models.Student
 
-
 @{
     ViewData["Title"] = "Index";
     Layout = null;
@@ -17,6 +16,7 @@
 </head>
 
 <body>
+
     <div class="d-lg-flex half">
         <div class="bg order-1" style="background-image: url('/images/ichigo.png');"></div>
         <div class="contents order-2 order-md-1">
@@ -31,17 +31,17 @@
                             <a asp-controller="Admins" asp-action="Index" class="abc" style="color: black; background-color: white">Admin</a>
                         </div>
 
-                        <form asp-action="Index" asp-route-returnurl="@ViewBag.ReturnUrl">                         
+                        <form asp-action="Index" asp-route-returnurl="@ViewBag.ReturnUrl">
                             <div class="form-group first">
                                 <label asp-for="@Model.Username" class="form-label my-3"></label>
                                 <sup>*</sup>
-                                <input asp-for="@Model.Username" class="form-control" placeholder="Enter username" required>
+                                <input asp-for="@Model.Username" class="form-control" placeholder="Enter username" >
                                 <span asp-validation-for="@Model.Username" class="text-danger"></span>
                             </div>
                             <div class="form-group last mb-3">
                                 <label asp-for="@Model.Password" class="form-label my-3"></label>
                                 <sup>*</sup>
-                                <input asp-for="@Model.Password" class="form-control" placeholder="Enter password" required>
+                                <input asp-for="@Model.Password" class="form-control" placeholder="Enter password" >
                                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
                             </div>
                             <div class="d-flex mb-3 align-items-center">
@@ -54,11 +54,7 @@
             </div>
         </div>
     </div>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vedd3670a3b1c4e178fdfb0cc912d969e1713874337387" integrity="sha512-EzCudv2gYygrCcVhu65FkAxclf3mYM6BCwiGUm6BEuLzSb5ulVhgokzCZED7yMIkzYVg65mxfIBNdNra5ZFNyQ==" data-cf-beacon='{"rayId":"886b0d7fbd9e85a3","version":"2024.4.1","token":"cd0b4b3a733644fc843ef0b185f98241"}' crossorigin="anonymous"></script>
+
 </body>
 </html>
 
