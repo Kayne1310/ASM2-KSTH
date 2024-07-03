@@ -1,1 +1,32 @@
 # ASM2-KSTH
+
+KSTH Management Student </br>
+Role:</br>
++ Admin
++ Student
++ Teacher
+
+Funtion:</br>
+
+Student:
+
++ Check Timetable: View and update personal timetable if necessary.
++ Check Attendance: Review attendance history and current attendance status.
++ Check Grades: View grades and academic performance.
++ Edit Profile and Password: Edit personal information and change password.
++ Login/Forgot Password: Log in to the system and recover password when forgotten.
+  
+Teacher:
++ Manage Attendance: Manage and update students' attendance records.
++ Manage Grades: Manage and enter students' grades.
++ Login/Forgot Password: Log in to the system and recover password when forgotten.
+
+  
+Admin:
++Create Class, Course, Student, Teacher: Create and manage classes, courses, student accounts, and teacher accounts.
++ Add Student to Class: Add students to classes.
++ Add Teacher to Class: Add teachers to classes.
++ Create Timetable: Create and manage the timetable for courses.
++ Login/Forgot Password: Log in to the system and recover password when forgotten.
++ Manage Room: Manage room allocations and schedules.
++ Create Session: Create and manage class sessions
