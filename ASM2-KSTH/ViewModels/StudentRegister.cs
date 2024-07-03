@@ -17,7 +17,7 @@ namespace ASM2_KSTH.ViewModels
 		[Display(Name = "Date Of Birth")]
 		[Required(ErrorMessage = "Date Of Birth is required")]
 		[DataType(DataType.Date)]
-		public DateTime? DateOfBirth { get; set; }
+		public DateTime DateOfBirth { get; set; }
 
 		[Display(Name = "Address")]
 		[Required(ErrorMessage = "Address is required")]

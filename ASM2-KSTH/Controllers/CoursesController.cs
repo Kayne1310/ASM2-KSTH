@@ -23,9 +23,9 @@ namespace ASM2_KSTH.Controllers
         public async Task<IActionResult> Index()
         {
             var courses = await _context.Courses
-                                        .Include(c => c.Major)
-                                        .Include(c => c.Classes)
-                                        .ToListAsync();
+             .Include(c => c.Major)
+             .Include(c => c.Classes)
+             .ToListAsync();
             return View(courses);
         }
 
@@ -49,6 +49,7 @@ namespace ASM2_KSTH.Controllers
             {
                 _context.Add(course);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Create Course Successful!";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorId", course.MajorId);
@@ -89,6 +90,7 @@ namespace ASM2_KSTH.Controllers
                 try
                 {
                     _context.Update(course);
+                    TempData["ok"] = "Edit Course Successful!";
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -167,6 +169,7 @@ namespace ASM2_KSTH.Controllers
                
                 _context.Add(newClass);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Add Room to Course Successfull !";
                 return RedirectToAction(nameof(Index));
             }
 

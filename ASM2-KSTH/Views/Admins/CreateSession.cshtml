@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Create Sessions";
+}
+
+<h1>Create Sessions</h1>
+
+<form asp-action="CreateSession" method="post">
+    <div class="col-md-4">
+    <div class="form-group">
+        <label for="numses" style="margin-top:15px"> Number of Sessions</label>
+        <input type="number" class="form-control" id="numses" name="numses" />
+
+    </div>
+    <div class="form-group">
+        <label for="courseId" style="margin-top:15px;">Course</label>
+        <select class="form-control" id="courseId" name="courseId">
+            @foreach (var course in (SelectList)ViewBag.Courses)
+            {
+                <option value="@course.Value">@course.Text</option>
+            }
+        </select>
+   
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-top:15px;">Create</button>
+    </div>
+</form>
+

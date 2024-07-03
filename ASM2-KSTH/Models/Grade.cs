@@ -5,6 +5,7 @@ namespace ASM2_KSTH.Models;
 
 public partial class Grade
 {
+
     public int GradeId { get; set; }
 
     public int? EnrollmentId { get; set; }
@@ -15,6 +16,7 @@ public partial class Grade
 
     public virtual Course? Course { get; set; }
 
-    public virtual Enrollment ? Enrollment { get; set; }
-    
+    public virtual Enrollment? Enrollment { get; set; }
+
+  
 }

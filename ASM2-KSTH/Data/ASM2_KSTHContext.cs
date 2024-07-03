@@ -24,6 +24,10 @@ namespace ASM2_KSTH.Data
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Roles> Roles { get; set; }
+        public DbSet<NumSession> Num_Session { get; set; }
+
+        public DbSet<Attendance> Attendance { get; set; }
+
         public object Schedule { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,27 +71,9 @@ namespace ASM2_KSTH.Data
 
 
 
-            modelBuilder.Entity<Schedule>()
-            .HasOne(s => s.Class)
-            .WithMany()
-            .HasForeignKey(s => s.ClassId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Schedule>()
-                .HasOne(s => s.Room)
-                .WithMany()
-                .HasForeignKey(s => s.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
-            modelBuilder.Entity<Schedule>()
-                .HasOne(s => s.Course)
-                .WithMany()
-                .HasForeignKey(s => s.CourseId)
-                .OnDelete(DeleteBehavior.Restrict);
 
         }
-        public DbSet<ASM2_KSTH.Models.Schedule> Schedule_1 { get; set; } = default!;
+     
         
 
     }

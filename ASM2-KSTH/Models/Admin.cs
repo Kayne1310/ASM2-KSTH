@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ASM2_KSTH.Models
 {
     public class Admin
-    { 
+    {
         public int Id { get; set; }
 
         [Display(Name = "Username")]

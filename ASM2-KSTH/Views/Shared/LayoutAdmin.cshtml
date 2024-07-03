@@ -29,6 +29,7 @@
     <link href="~/sass/semi-dark.css" rel="stylesheet">
     <link href="~/sass/bordered-theme.css" rel="stylesheet">
     <link href="~/sass/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />
 
 </head>
 
@@ -486,8 +487,38 @@
     </script>
     <script src="~/assets/plugins/simplebar/js/simplebar.min.js"></script>
     <script src="~/assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
-
+    @if (TempData["ok"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $.toast({
+                    heading: 'Notification',
+                    text: "@TempData["ok"]",
+                    showHideTransition: 'slide',
+                    icon: 'success',
+                    position: 'top-center',
+                    hideAfter: 3000
+                });
+            });
+        </script>
+    }
+    else if (TempData["no"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $.toast({
+                    heading: 'Notification',
+                    text: "@TempData["no"]",
+                    showHideTransition: 'slide',
+                    icon: 'error',
+                    position: 'top-center',
+                    hideAfter: 10000
+                });
+            });
+        </script>
+    }
 </body>
 
 

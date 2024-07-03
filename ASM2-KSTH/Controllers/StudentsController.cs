@@ -48,7 +48,8 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
                     ViewBag.ErrorMessage = "Invalid username or password.";
-                    return View("Index", model);
+               
+                return View("Index", model);
 
                 }
                 else
@@ -68,8 +69,9 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
+                     TempData["ok"] = "Student registered successfully!";
 
-                    if (Url.IsLocalUrl(ReturnUrl))
+                if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
@@ -174,6 +176,7 @@ namespace ASM2_KSTH.Controllers
 
                 _context.Update(student);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Edit Profile Student Successful !";
 
                 ViewBag.StudentName = student.Name;
                 ViewBag.StudentEmail = student.Email;
@@ -199,16 +202,93 @@ namespace ASM2_KSTH.Controllers
 
         #endregion
 
+        [Authorize(Roles = "Students")]
+        public async Task<IActionResult> ListStudentinClass(int studentId)
+        {
+            // Find the student by StudentId
+            var student = await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Class)
+                .ThenInclude(c => c.Course)
+                .FirstOrDefaultAsync(s => s.StudentId == studentId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // Get all class IDs for the student's enrollments
+            var classIds = student.Enrollments.Select(e => e.ClassId).ToList();
+
+            // Get all students in those classes
+            var studentsInClasses = await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Class)
+                .ThenInclude(c => c.Course)
+                .Where(s => s.Enrollments.Any(e => classIds.Contains(e.ClassId)))
+                .ToListAsync();
+
+            // Prepare the view model for displaying students in class
+            var studentInClassViewModels = studentsInClasses.Select(s => new StudentInClassViewModel
+            {
+                StudentId = s.StudentId,
+                StudentName = s.Name,
+                ClassId = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).ClassId,
+                ClassName = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.ClassName,
+                CourseId = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.CourseId.Value,
+                CourseName = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.Course.CourseName
+            }).ToList();
+
+            ViewBag.StudentName = student.Name;
+            ViewBag.ClassName = student.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.ClassName;
+
+            return View(studentInClassViewModels);
+        }
+
+
+        [Authorize(Roles = "Students")]
+        public async Task<IActionResult> CheckAttendance()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Students");
+            }
+
+            var studentId = int.Parse(userId);
+            var attendanceStatuses = await _context.Attendance
+                .Where(a => a.StudentId == studentId)
+                .Select(a => new AttendanceStatusViewModel
+                {
+                    ClassId = a.ClassId,
+                    ClassName = a.Class.ClassName,
+                    CourseName = a.Class.Course.CourseName,
+                    AttendanceStatus = a.AttendanceStatus,
+                    Numses = a.Class.Course.NumSessions.FirstOrDefault(ns => ns.NumId == a.NumId).Numses,
+                    Reason = a.Reason,
+                    AttendanceDate = a.AttendanceDate.ToDateTime(new TimeOnly(0, 0))
+                })
+                .ToListAsync();
+
+            return View(attendanceStatuses);
+        }
+
 
         [Authorize(Roles = "Students")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
+            TempData["ok"] = "See You Again !";
             return Redirect("/");
         }
 
         [Authorize(Roles = "Students")]
         public ActionResult StudentPage()
+        {
+            return View();
+        }
+
+        public IActionResult Dashboard()
         {
             return View();
         }
