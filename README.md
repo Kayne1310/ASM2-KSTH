@@ -6,7 +6,7 @@ Role:</br>
 + Student
 + Teacher
 
-Funtion:</br>
+Feature:</br>
 
 Student:
 
