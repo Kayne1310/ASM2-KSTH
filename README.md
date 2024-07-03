@@ -23,7 +23,7 @@ Teacher:
 
   
 Admin:
-+Create Class, Course, Student, Teacher: Create and manage classes, courses, student accounts, and teacher accounts.
++ Create Class, Course, Student, Teacher: Create and manage classes, courses, student accounts, and teacher accounts.
 + Add Student to Class: Add students to classes.
 + Add Teacher to Class: Add teachers to classes.
 + Create Timetable: Create and manage the timetable for courses.
