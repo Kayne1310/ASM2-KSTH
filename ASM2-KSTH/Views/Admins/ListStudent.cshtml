@@ -37,12 +37,12 @@
 							<td>@student.Email</td>
 							<td>@student.MajorName</td>
 							<td>
-								<a asp-action="EditListST" asp-route-id="@student.StudentId" asp-route-MajorId="@ViewData["MajorId"]">
+								<a asp-action="EditListST" asp-route-id="@student.StudentId" asp-route-MajorId="@ViewData["MajorId"]" style="text-decoration: none;">
 									<button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
 										<i class="material-icons-outlined">cloud_upload</i> Edit
 									</button>
 								</a>
-								<a asp-action="DeleteListST" asp-route-id="@student.StudentId">
+								<a asp-action="DeleteListST" asp-route-id="@student.StudentId" style="text-decoration: none;">
 									<button type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
 										<i class="material-icons-outlined">delete</i> Delete
 									</button>

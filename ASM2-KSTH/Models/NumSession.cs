@@ -1,20 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ASM2_KSTH.Models
+namespace ASM2_KSTH.Models;
+
+public partial class NumSession
 {
-    public class NumSession
-    {
-        [Key]
-        
-        public int NumId { get; set; }
+    [Key]
+    public int NumId { get; set; }
 
-        [Required]
-        public int Numses { get; set; }
+    public string Numses { get; set; }
 
-        [ForeignKey("Course")]
-        public int CourseId { get; set; }
+    public int? CourseId { get; set; }
 
-        public virtual Course? Course { get; set; }
-    }
+    public virtual Course? Course { get; set; }
+
+
 }
+ 

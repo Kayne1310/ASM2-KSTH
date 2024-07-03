@@ -92,7 +92,7 @@ namespace ASM2_KSTH.Controllers.Grade
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
                     Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
-                    CourseId = e.Class.CourseId.HasValue ? e.Class.CourseId.Value : 0,
+                    CourseId = e.Class.CourseId.HasValue ? e.Class.CourseId.Value : 0 ,
                     EnrollmentId = e.Id,
                     GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null 
                 })
@@ -148,7 +148,7 @@ namespace ASM2_KSTH.Controllers.Grade
                 grade.Grade1 = model.Grade1;
                 _context.Update(grade);
                 await _context.SaveChangesAsync();
-
+                TempData["ok"] = "Edit Grade Successful!";
                 return RedirectToAction("ListStudents", new { classId = classId });
             }
             catch (DbUpdateConcurrencyException)
@@ -208,6 +208,7 @@ namespace ASM2_KSTH.Controllers.Grade
 
                 _context.Add(newGrade);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Add Grade Successful!";
                 return RedirectToAction("ListStudents", new { classId = classId });
             }
             catch (DbUpdateConcurrencyException)
@@ -219,6 +220,37 @@ namespace ASM2_KSTH.Controllers.Grade
             model.Students = _context.Students.ToList();
             model.Classes = _context.Classes.ToList();
             ViewData["ClassId"] = classId;
+            return View(model);
+        }
+
+        [Authorize(Roles = "Students")]
+        public async Task<IActionResult> StudentGrades(int studentId)
+        {
+            var student = await _context.Students
+          .Include(s => s.Enrollments)
+          .ThenInclude(e => e.Class)
+          .ThenInclude(c => c.Course)
+          .Include(s => s.Enrollments)
+          .ThenInclude(e => e.Grades)  // Ensure Grades are included
+          .FirstOrDefaultAsync(s => s.StudentId == studentId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var model = new StudentGradesViewModel
+            {
+                StudentId = student.StudentId,
+                StudentName = student.Name,
+                Grades = student.Enrollments.Select(e => new GradesViewModels
+                {
+                    GradeId = e.Grades.FirstOrDefault()?.GradeId ?? 0,
+                    CourseName = e.Class.Course.CourseName,
+                    Grade1 = e.Grades.FirstOrDefault()?.Grade1 ?? null  
+                }).ToList()
+            };
+
             return View(model);
         }
 

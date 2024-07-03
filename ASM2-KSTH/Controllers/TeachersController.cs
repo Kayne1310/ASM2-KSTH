@@ -53,6 +53,8 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
                     ViewBag.ErrorMessage = "Invalid username or password.";
+                     TempData["no"] = "Invalid username or password.";
+              
                     return View("Index", model);
 
                 }
@@ -71,17 +73,17 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
+                    TempData["ok"] = "Student registered successfully!";
 
-                    if (Url.IsLocalUrl(ReturnUrl))
+
+                if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
                     else
                     {
 
-                     
-
-                        return RedirectToAction("TeacherPage", "Teachers");
+                        return RedirectToAction("DashBoard", "Teachers");
 
                     }
 
@@ -91,6 +93,10 @@ namespace ASM2_KSTH.Controllers
         }
         #endregion
 
+        public IActionResult DashBoard()
+        {
+            return View();
+        }
 
         #region Profile for Teacher
 
@@ -163,7 +169,7 @@ namespace ASM2_KSTH.Controllers
 
                 _context.Update(teacher);
                 await _context.SaveChangesAsync();
-
+                TempData["ok"] = "Edit Profile Teacher Sucessful";
                 ViewBag.TeacherName = teacher.Name;
                 ViewBag.TeacherEmail = teacher.Email;
 
@@ -188,7 +194,9 @@ namespace ASM2_KSTH.Controllers
         [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Logout()
         {
+
             await HttpContext.SignOutAsync();
+            TempData["ok"] = "See you again !";
             return Redirect("/");
         }
 

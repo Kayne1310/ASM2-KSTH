@@ -69,7 +69,8 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
                     ViewBag.ErrorMessage = "Invalid username or password.";
-                    return View("Index", model);
+                
+                   return View("Index", model);
 
                 }
                 else
@@ -86,8 +87,9 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
+                TempData["ok"] = "Welcome Back Admin!";
 
-                    if (Url.IsLocalUrl(ReturnUrl))
+                if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
@@ -124,12 +126,14 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
                     ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                    TempData["no"] = "Username already exists. Please choose a different username.";
                     return View();
                 }
                 // Truy vấn cơ sở dữ liệu để lấy MajorId dựa trên MajorName
                 var major = _context.Majors.FirstOrDefault(m => m.MajorName == model.MajorName);
 				if (major == null)
                     {
+                        
                         // Xử lý trường hợp không tìm thấy MajorName
                         return NotFound();
                     }
@@ -144,7 +148,8 @@ namespace ASM2_KSTH.Controllers
                     // Thêm sinh viên mới vào cơ sở dữ liệu
                     _context.Students.Add(student);
                     _context.SaveChanges();
-                    return RedirectToAction("AdminPage", "Admins");
+                     TempData["ok"] = "Create Student Successfuly!";
+                 return RedirectToAction("AdminPage", "Admins");
             }
             
             catch (Exception ex)
@@ -179,6 +184,7 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
                     ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                    TempData["no"] = "Username already exists. Please choose a different username.";
                     return View();
                 }
                 var teacher = new Teacher
@@ -199,6 +205,7 @@ namespace ASM2_KSTH.Controllers
                 // Thêm giáo viên mới vào cơ sở dữ liệu
                 _context.Teachers.Add(teacher);
                 _context.SaveChanges();
+                TempData["ok"] = "Create Teacher Successfull!";
                 return RedirectToAction("AdminPage", "Admins");
             }
 
@@ -361,8 +368,9 @@ namespace ASM2_KSTH.Controllers
 
                     _context.Update(student);
                     await _context.SaveChangesAsync();
-
-                    return RedirectToAction("ListStudent","Admins");   
+                    TempData["ok"] = "Edit Student Successfull!";
+    
+                     return RedirectToAction("ListStudent","Admins");   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -410,7 +418,8 @@ namespace ASM2_KSTH.Controllers
 			var student = await _context.Students.FindAsync(id);
 			_context.Students.Remove(student);
 			await _context.SaveChangesAsync();
-			return RedirectToAction("ListStudent", "Admins");
+            TempData["ok"] = "Delete  Student Successfull!";
+            return RedirectToAction("ListStudent", "Admins");
 		}
 
         #endregion
@@ -534,8 +543,9 @@ namespace ASM2_KSTH.Controllers
 
 				_context.Update(teacher);
 				await _context.SaveChangesAsync();
+                TempData["ok"] = "Edit Teacher Successfull!";
 
-				return RedirectToAction("ListTeacher", "Admins");
+                return RedirectToAction("ListTeacher", "Admins");
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -581,6 +591,7 @@ namespace ASM2_KSTH.Controllers
             var teacher = await _context.Teachers.FindAsync(id);
             _context.Teachers.Remove(teacher);
             await _context.SaveChangesAsync();
+            TempData["ok"] = "Delete Teacher Successfull!";
             return RedirectToAction("ListTeacher", "Admins");
         }
 
@@ -613,8 +624,9 @@ namespace ASM2_KSTH.Controllers
         {
             var enrollment = new Enrollment { StudentId = studentId, ClassId = classId };
             _context.Enrollments.Add(enrollment);
+            TempData["ok"] = "Add Student To Class Sucessfull!";
             await _context.SaveChangesAsync();
-            return RedirectToAction("AddStudent", "Admins", new { classId = classId });
+            return RedirectToAction("ListStudentToClass", "Admins");
         }
         [HttpGet]
         public async Task<IActionResult> AddStudentToClass(int studentId)
@@ -638,13 +650,50 @@ namespace ASM2_KSTH.Controllers
 
             return View();
         }
-        #endregion 
+        #endregion
+
+        [HttpGet]
+        public async Task<IActionResult> CreateSession()
+        {
+            var coursesWithoutNumId = await _context.Courses
+             .Where(c => c.NumSessions.All(ns => ns.NumId == null))
+            .ToListAsync();
+            ViewBag.Courses = new SelectList(coursesWithoutNumId, "CourseId", "CourseName");
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateSession(int numses, int courseId)
+        {
+            if (numses <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "Numses must be a positive number.");
+                return View();
+            }
+
+            for (int i = 1; i <= numses; i++)
+            {
+                var session = new NumSession
+                {
+                    Numses = i.ToString(),
+                    CourseId = courseId
+                };
+
+                _context.Num_Session.Add(session);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["ok"] = $"{numses} sessions created successfully.";
+            return RedirectToAction("Index", "Courses"); 
+        }
+
 
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Logout()
 
         {
             await HttpContext.SignOutAsync();
+            TempData["ok"] = "See you again!";
             return Redirect("/");
         }
     }
