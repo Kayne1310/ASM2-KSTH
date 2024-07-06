@@ -77,14 +77,70 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("StudentPage", "Students");
+                        return RedirectToAction("DashBoard", "Students");
                     }
                 }
 
             return View();
         }
-        #endregion
+		#endregion
 
+		[Authorize(Roles = "Students")]
+		#region Change password for Student
+		[HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+       
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword, string confirmNewPassword)
+        {
+            if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmNewPassword))
+            {
+				TempData["no"] = "Please fill in all required fields.";
+                return View();
+            }
+
+            // Get the currently logged-in user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Home"); // Or another action for unauthorized access
+            }
+
+            var student = await _context.Students.FindAsync(int.Parse(userId));
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // Validate old password
+            if (student.Password != oldPassword.ToMd5Hash(student.RandomKey))
+            {
+				TempData["no"] = "The old password is incorrect.";
+                return View();
+            }
+
+            // Validate new password and confirmation
+            if (newPassword != confirmNewPassword)
+            {
+				TempData["no"] = "The new password and confirmation password do not match.";
+                return View();
+            }
+
+            // Update password
+            student.Password = newPassword.ToMd5Hash(student.RandomKey);
+            _context.Update(student);
+            await _context.SaveChangesAsync();
+
+            TempData["ok"] = "Password changed successfully!";
+            return RedirectToAction("DashBoard", "Students");
+        }
+
+        #endregion
 
         #region Profile for Student
 
@@ -181,7 +237,7 @@ namespace ASM2_KSTH.Controllers
                 ViewBag.StudentName = student.Name;
                 ViewBag.StudentEmail = student.Email;
 
-                return RedirectToAction("StudentPage", "Students");
+                return RedirectToAction("DashBoard", "Students");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -282,14 +338,17 @@ namespace ASM2_KSTH.Controllers
             return Redirect("/");
         }
 
-        [Authorize(Roles = "Students")]
-        public ActionResult StudentPage()
+       
+        public async Task<IActionResult> Dashboard()
         {
-            return View();
-        }
 
-        public IActionResult Dashboard()
-        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var studentId = int.Parse(userId);
+            var studentName = await _context.Students
+                                .Where(a => a.StudentId == studentId)
+                                .Select(a => a.Name)
+                                .FirstOrDefaultAsync();
+            ViewBag.StudentName = studentName;
             return View();
         }
     }
