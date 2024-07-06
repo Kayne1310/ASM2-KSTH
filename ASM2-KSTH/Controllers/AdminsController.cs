@@ -44,6 +44,11 @@ namespace ASM2_KSTH.Controllers
 
         public async Task<IActionResult> Dashboard()
         {
+            ViewBag.TeacherCount = await _context.Teachers.CountAsync();
+            ViewBag.StudentCount = await _context.Students.CountAsync();
+            ViewBag.ClassCount = await _context.Classes.CountAsync();
+            ViewBag.RoomCount = await _context.Rooms.CountAsync();
+            ViewBag.CourseCount = await _context.Courses.CountAsync();
             return View();
         }
     

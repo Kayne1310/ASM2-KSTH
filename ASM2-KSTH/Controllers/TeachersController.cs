@@ -91,10 +91,73 @@ namespace ASM2_KSTH.Controllers
                 return View();
 
         }
-        #endregion
+		#endregion
 
-        public IActionResult DashBoard()
+		#region Change password for Teacher
+		[HttpGet]
+		[Authorize(Roles = "Teachers")]
+		public IActionResult ChangePassword()
+		{
+			return View();
+		}
+
+		[HttpPost]
+	
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword, string confirmNewPassword)
+		{
+			if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmNewPassword))
+			{
+				TempData["no"] = "Please fill in all required fields.";
+				return View();
+			}
+
+			// Get the currently logged-in user
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null)
+			{
+				return RedirectToAction("Index", "Home"); // Or another action for unauthorized access
+			}
+
+			var teacher = await _context.Teachers.FindAsync(int.Parse(userId));
+			if (teacher == null)
+			{
+				return NotFound();
+			}
+
+			// Validate old password
+			if (teacher.Password != oldPassword.ToMd5Hash(teacher.RandomKey))
+			{
+				TempData["no"] = "The old password is incorrect.";
+				return View();
+			}
+
+			// Validate new password and confirmation
+			if (newPassword != confirmNewPassword)
+			{
+				TempData["no"] = "The new password and confirmation password do not match.";
+				return View();
+			}
+
+			// Update password
+			teacher.Password = newPassword.ToMd5Hash(teacher.RandomKey);
+			_context.Update(teacher);
+			await _context.SaveChangesAsync();
+
+			TempData["ok"] = "Password changed successfully!";
+			return RedirectToAction("DashBoard", "Teachers");
+		}
+
+		#endregion
+		public async Task<IActionResult> DashBoard()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var teacherId = int.Parse(userId);
+            var teachername = await _context.Teachers
+                                .Where(a => a.TeacherId == teacherId)
+                                .Select(a => a.Name)
+                                .FirstOrDefaultAsync();
+            ViewBag.TeacherName = teachername;
             return View();
         }
 
@@ -173,7 +236,7 @@ namespace ASM2_KSTH.Controllers
                 ViewBag.TeacherName = teacher.Name;
                 ViewBag.TeacherEmail = teacher.Email;
 
-                return RedirectToAction("TeacherPage", "Teachers"); //// 
+                return RedirectToAction("DashBoard", "Teachers"); //// 
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -200,11 +263,7 @@ namespace ASM2_KSTH.Controllers
             return Redirect("/");
         }
 
-        [Authorize(Roles = "Teachers")]
-        public IActionResult TeacherPage()
-        {
-            return View();
-        }
+      
 
     }
 }
