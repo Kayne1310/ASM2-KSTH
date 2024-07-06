@@ -24,7 +24,7 @@ namespace ASM2_KSTH.Models;
         [Display(Name = "Username")]
 
 		[Required(ErrorMessage = "Username is required")]
-		[MinLength(5, ErrorMessage = "Username must be at least 6 characters")]
+		[MinLength(4, ErrorMessage = "Username must be at least 6 characters")]
 		public string Username { get; set; }
 
 		[Display(Name = "Password")]
@@ -36,4 +36,5 @@ namespace ASM2_KSTH.Models;
         public int RoleId { get; set; }
         public virtual Roles? Roles { get; set; }
         public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+	
     }

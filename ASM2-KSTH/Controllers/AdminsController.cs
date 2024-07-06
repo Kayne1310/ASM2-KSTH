@@ -12,6 +12,7 @@ using AutoMapper;
 using ASM2_KSTH.Helpers;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Drawing;
 
 
 namespace ASM2_KSTH.Controllers
@@ -20,6 +21,7 @@ namespace ASM2_KSTH.Controllers
     {
         private readonly ASM2_KSTHContext _context;
         private readonly IMapper _mapper;
+
         public AdminsController(ASM2_KSTHContext context, IMapper mapper)
         {
             _context = context;
@@ -154,12 +156,12 @@ namespace ASM2_KSTH.Controllers
             }
             return View();
         }
-        #endregion
+		#endregion
 
 
-        #region Register for Teacher
-      
-        [HttpGet]
+		#region Register for Teacher
+		[Authorize(Roles = "Admins")]
+		[HttpGet]
         public IActionResult SignupTE(string? ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
@@ -210,10 +212,13 @@ namespace ASM2_KSTH.Controllers
             return View();
         }
 
-		#endregion
 
 
-		#region List of Student
+        #endregion
+
+
+        #region List of Student
+        [Authorize(Roles = "Admins")]
 		[HttpGet]
 		public async Task<IActionResult> ListStudent(int MajorId)
 		{
@@ -263,11 +268,12 @@ namespace ASM2_KSTH.Controllers
 					return BadRequest("Invalid action type"); // return bad request if actionType is not expected
 			}
 		}
-        #endregion
+		#endregion
 
 
-        #region Edit list student
-        [HttpGet]
+		#region Edit list student
+		[Authorize(Roles = "Admins")]
+		[HttpGet]
         public async Task<IActionResult> EditListST(int id)
         {
             var student = await _context.Students
@@ -379,11 +385,12 @@ namespace ASM2_KSTH.Controllers
             return View(model);
         }
 
-        #endregion
+		#endregion
 
 
-        #region Delete All Info Student
-        [HttpGet]
+		#region Delete All Info Student
+		[Authorize(Roles = "Admins")]
+		[HttpGet]
 		public async Task<IActionResult> DeleteListST(int? id)
 		{
 			if (id == null)
@@ -399,7 +406,6 @@ namespace ASM2_KSTH.Controllers
 			{
 				return NotFound();
 			}
-
 			return View(student);
 		}
 
@@ -413,12 +419,12 @@ namespace ASM2_KSTH.Controllers
 			return RedirectToAction("ListStudent", "Admins");
 		}
 
-        #endregion
+		#endregion
 
 
-        #region List of Teacher
-
-        [HttpGet]
+		#region List of Teacher
+		[Authorize(Roles = "Admins")]
+		[HttpGet]
 		public async Task<IActionResult> ListTeacher()
 		{
 			var teachers = await _context.Teachers
@@ -459,11 +465,12 @@ namespace ASM2_KSTH.Controllers
 					return BadRequest("Invalid action type"); // return bad request if actionType is not expected
 			}
 		}
-        #endregion
+		#endregion
 
 
-        #region Edit list teacher
-        [HttpGet]        
+		#region Edit list teacher
+		[Authorize(Roles = "Admins")]
+		[HttpGet]        
 		public async Task<IActionResult> EditListTE(int id)
 		{
 			var teacher = await _context.Teachers
@@ -550,12 +557,12 @@ namespace ASM2_KSTH.Controllers
 
 			return View(model);
 		}
-        #endregion
+		#endregion
 
 
-        #region Delete All Info Teacher
-
-        [HttpGet]
+		#region Delete All Info Teacher
+		[Authorize(Roles = "Admins")]
+		[HttpGet]
         public async Task<IActionResult> DeleteListTE(int? id)
         {
             if (id == null)
@@ -584,11 +591,12 @@ namespace ASM2_KSTH.Controllers
             return RedirectToAction("ListTeacher", "Admins");
         }
 
-        #endregion
+		#endregion
 
 
-        #region List student to class
-        [HttpGet]
+		#region List student to class
+		[Authorize(Roles = "Admins")]
+		[HttpGet]
         public async Task<IActionResult> ListStudentToClass()
         {
                     var students = await _context.Students
@@ -604,17 +612,18 @@ namespace ASM2_KSTH.Controllers
         .ToListAsync();
             return View(students);
         }
-        #endregion
+		#endregion
 
 
-        #region Add student to class
-        [HttpPost]
+		#region Add student to class
+		[Authorize(Roles = "Admins")]
+		[HttpPost]
         public async Task<IActionResult> AddStudentToClass(int studentId, int classId)
         {
             var enrollment = new Enrollment { StudentId = studentId, ClassId = classId };
             _context.Enrollments.Add(enrollment);
             await _context.SaveChangesAsync();
-            return RedirectToAction("AddStudent", "Admins", new { classId = classId });
+            return RedirectToAction("ListStudentToClass", "Admins", new { classId = classId });
         }
         [HttpGet]
         public async Task<IActionResult> AddStudentToClass(int studentId)
@@ -639,6 +648,7 @@ namespace ASM2_KSTH.Controllers
             return View();
         }
         #endregion 
+
 
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Logout()

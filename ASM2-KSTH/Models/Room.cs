@@ -10,4 +10,5 @@ public partial class Room
     public string? RoomNumber { get; set; }
 
     public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+
 }

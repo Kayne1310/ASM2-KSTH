@@ -37,7 +37,7 @@ namespace ASM2_KSTH.ViewModels
 		public int MajorId { get; set; } // Foreign Key
 
 		[Required(ErrorMessage = "MajorName is required")]
-		public string MajorName { get; set; }
+		public string MajorName { get; set; } 
 		public Major Major { get; set; }
 
 		[Display(Name = "Username")]

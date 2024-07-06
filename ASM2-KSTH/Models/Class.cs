@@ -22,10 +22,9 @@ public partial class Class
 
     public virtual Course? Course { get; set; }
 
-    public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
-
     public virtual Room? Room { get; set; }
 
     public virtual Teacher? Teacher { get; set; }
 
+	public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 }

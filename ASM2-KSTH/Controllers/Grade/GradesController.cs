@@ -67,7 +67,7 @@ namespace ASM2_KSTH.Controllers.Grade
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
                     Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
-                    EnrollmentId = e.Id,
+                    EnrollmentId = e.EnrollmentId,
                     GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null
                 })
                 .ToListAsync();
@@ -93,7 +93,7 @@ namespace ASM2_KSTH.Controllers.Grade
                     MajorName = e.Student.Major.MajorName,
                     Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
                     CourseId = e.Class.CourseId.HasValue ? e.Class.CourseId.Value : 0,
-                    EnrollmentId = e.Id,
+                    EnrollmentId = e.EnrollmentId,
                     GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null 
                 })
                 .ToListAsync();

@@ -15,9 +15,8 @@ public partial class Course
 
     public int? MajorId { get; set; }
 
-    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
-
-    public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
-
     public virtual Major? Major { get; set; }
+
+	public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+	public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
 }

@@ -1,0 +1,184 @@
+﻿@model ASM2_KSTH.ViewModels.ScheduleVM
+
+@{
+    ViewData["Title"] = "Student Schedule";
+}
+
+<h1>Student Schedule</h1>
+
+<div class="timetable-img text-center">
+    <img src="img/content/timetable.png" alt="">
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>TIME</th>
+                @foreach (var day in Model.DaysOfWeek)
+                {
+                    <th class="text-uppercase">@(DateTime.Parse(day).ToString("dddd"))  <br /> @day </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var slot in Model.Slots)
+            {
+                <tr>
+                    <td class="align-middle">@slot.SlotName <br /> (@slot.StartTime.ToString(@"hh\:mm") - @slot.EndTime.ToString(@"hh\:mm"))</td>
+                    @foreach (var day in Model.DaysOfWeek)
+                    {
+                        var schedule = Model.Schedules.FirstOrDefault(s => s.Day.ToString("yyyy-MM-dd") == day && s.SlotId == slot.SlotId);
+                        if (schedule != null)
+                        {
+                            <td>
+                                <p class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">Class: @schedule.ClassName</p>
+                                <p>Course: @schedule.CourseName</p>
+                                <p>Room: @schedule.RoomNumber</p>
+                                <p class="font-size13 text-light-gray">Lecture: @schedule.Name</p>
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    @if (Model.CurrentPage > 1)
+    {
+        <a asp-action="ViewScheduleST" asp-route-page="@(Model.CurrentPage - 1)" class="btn btn-primary">Previous</a>
+    }
+    else
+    {
+        <span class="btn btn-primary disabled">Previous</span>
+    }
+    <a asp-action="ViewScheduleST" asp-route-page="@(Model.CurrentPage + 1)" class="btn btn-primary">Next</a>
+</div>
+
+
+
+<style>
+    .bg-light-gray {
+        background-color: #f7f7f7;
+    }
+
+    .table-bordered thead td, .table-bordered thead th {
+        border-bottom-width: 2px;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table-bordered td, .table-bordered th {
+        border: 1px solid #dee2e6;
+    }
+
+
+    .bg-sky.box-shadow {
+        box-shadow: 0px 5px 0px 0px #00a2a7
+    }
+
+    .bg-orange.box-shadow {
+        box-shadow: 0px 5px 0px 0px #af4305
+    }
+
+    .bg-green.box-shadow {
+        box-shadow: 0px 5px 0px 0px #4ca520
+    }
+
+    .bg-yellow.box-shadow {
+        box-shadow: 0px 5px 0px 0px #dcbf02
+    }
+
+    .bg-pink.box-shadow {
+        box-shadow: 0px 5px 0px 0px #e82d8b
+    }
+
+    .bg-purple.box-shadow {
+        box-shadow: 0px 5px 0px 0px #8343e8
+    }
+
+    .bg-lightred.box-shadow {
+        box-shadow: 0px 5px 0px 0px #d84213
+    }
+
+
+    .bg-sky {
+        background-color: #02c2c7
+    }
+
+    .bg-orange {
+        background-color: #e95601
+    }
+
+    .bg-green {
+        background-color: #5bbd2a
+    }
+
+    .bg-yellow {
+        background-color: #f0d001
+    }
+
+    .bg-pink {
+        background-color: #ff48a4
+    }
+
+    .bg-purple {
+        background-color: #9d60ff
+    }
+
+    .bg-lightred {
+        background-color: #ff5722
+    }
+
+    .padding-15px-lr {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .padding-5px-tb {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .margin-10px-bottom {
+        margin-bottom: 10px;
+    }
+
+    .border-radius-5 {
+        border-radius: 5px;
+    }
+
+    .margin-10px-top {
+        margin-top: 10px;
+    }
+
+    .font-size14 {
+        font-size: 14px;
+    }
+
+    .text-light-gray {
+        color: #d6d5d5;
+    }
+
+    .font-size13 {
+        font-size: 13px;
+    }
+
+    .table-bordered td, .table-bordered th {
+        border: 1px solid #dee2e6;
+    }
+
+    .table td, .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+</style>

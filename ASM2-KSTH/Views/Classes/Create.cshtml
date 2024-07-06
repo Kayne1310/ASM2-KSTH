@@ -28,38 +28,38 @@
 
                         <div class="row g-3">
                             <div class="col-12 col-lg-6">
-                                <label asp-for="ClassName" class="form-label">Class Name</label>
+                                <label class="form-label">Class Name</label>
                                 <input asp-for="ClassName" class="form-control" />
                                 <span asp-validation-for="ClassName" class="text-danger"></span>
                             </div>
 
                             <div class="col-12 col-lg-6">
-                                <label asp-for="Year" class="form-label">Year</label>
+                                <label  class="form-label">Year</label>
                                 <input asp-for="Year" class="form-control" />
                                 <span asp-validation-for="Year" class="text-danger"></span>
                             </div>
 
                             <div class="col-12 col-lg-6">
-                                <label asp-for="Room" class="form-label">Room</label>
+                                <label  class="form-label">Room</label>
                                 <select asp-for="Room" class="form-select" asp-items="ViewBag.Rooms"></select>
                                 <span asp-validation-for="Room" class="text-danger"></span>
                             </div>
 
                             <div class="col-12 col-lg-6">
-                                <label asp-for="Teacher" class="form-label">Teacher</label>
+                                <label class="form-label">Teacher</label>
                                 <select asp-for="Teacher" class="form-select" asp-items="ViewBag.Teachers"></select>
                                 <span asp-validation-for="Teacher" class="text-danger"></span>
                             </div>
 
                             <div class="col-12 col-lg-6">
-                                <label asp-for="Semester" class="form-label">Semester</label>
+                                <label  class="form-label">Semester</label>
                                 <select asp-for="Semester" class="form-select" asp-items="ViewBag.Semesters"></select>
                                 <span asp-validation-for="Semester" class="text-danger"></span>
                             </div>
 
 
                             <div class="col-12 col-lg-6">
-                                <label asp-for="CourseName" class="form-label">CourseName</label>
+                                <label  class="form-label">Course Name</label>
                                 <select asp-for="CourseName" class="form-select" asp-items="ViewBag.Courses"></select>
                                 <span asp-validation-for="CourseName" class="text-danger"></span>
                             </div>

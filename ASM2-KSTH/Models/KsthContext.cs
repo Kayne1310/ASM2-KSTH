@@ -74,9 +74,9 @@ public partial class KsthContext : DbContext
 
         modelBuilder.Entity<Enrollment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Enrollme__3214EC07F1363D14");
+            entity.HasKey(e => e.EnrollmentId).HasName("PK__Enrollme__3214EC07F1363D14");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.EnrollmentId).ValueGeneratedNever();
 
             entity.HasOne(d => d.Class).WithMany(p => p.Enrollments)
                 .HasForeignKey(d => d.ClassId)

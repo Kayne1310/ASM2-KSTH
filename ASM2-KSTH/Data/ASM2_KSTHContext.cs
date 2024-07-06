@@ -24,10 +24,12 @@ namespace ASM2_KSTH.Data
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Roles> Roles { get; set; }
+		public DbSet<Schedule> Schedules { get; set; }
+		public DbSet<Slot> Slots { get; set; }
 
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<Major>()
@@ -115,6 +117,8 @@ namespace ASM2_KSTH.Data
                     .HasForeignKey(e => e.RoleId)
                     .IsRequired();
             });
+
+
         }
 
     }

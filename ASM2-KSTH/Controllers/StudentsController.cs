@@ -75,7 +75,7 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("StudentPage", "Students");
+                        return RedirectToAction("ViewScheduleST", "Schedules");
                     }
                 }
 

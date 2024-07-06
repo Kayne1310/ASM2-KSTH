@@ -54,7 +54,7 @@ namespace ASM2_KSTH
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Students}/{action=Index}/{id?}");
+                pattern: "{controller=Admins}/{action=Index}/{id?}");
 
 
             app.Run();
