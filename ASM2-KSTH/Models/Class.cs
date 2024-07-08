@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace ASM2_KSTH.Models;
 
 public partial class Class
@@ -14,7 +13,7 @@ public partial class Class
 
     public string? Semester { get; set; }
 
-    public int? Year { get; set; }
+    public int Year { get; set; }
 
     public int? RoomId { get; set; }
 
@@ -27,4 +26,7 @@ public partial class Class
     public virtual Teacher? Teacher { get; set; }
 
 	public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+
+    public virtual ICollection<Attendance> Attendance { get; set; } = new List<Attendance>();
+
 }

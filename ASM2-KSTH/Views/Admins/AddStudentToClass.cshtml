@@ -7,22 +7,27 @@
 
 <h2>Add Student to Class</h2>
 
+
 <form asp-action="AddStudentToClass" method="post">
-    <div class="form-group">
-        <label for="studentName">Student Name:</label>
-        <input type="hidden" id="studentId" name="studentId" value="@ViewBag.Student.StudentId" />
-        <p id="studentName">@ViewBag.Student.Name</p>
-    </div>
+<div class="card">
+	<div class="card-body">
+        <div class="col-12 col-lg-6">
+            <label class="form-label">First Name</label>
+            <input type="hidden" id="studentId" name="studentId" value="@ViewBag.Student.StudentId" />
+            <input type="text" class="form-control" placeholder="@ViewBag.Student.Name">
+        </div>
+		<div class="mb-4">
+			<label for="single-select-field" class="form-label">Basic single select</label>
+                <select class="form-select" id="single-select-field" data-placeholder="Choose one thing" id="classId" name="classId">
 
-    <div class="form-group">
-        <label for="classId">Select Class:</label>
-        <select class="form-control" id="classId" name="classId">
-            @foreach (var @class in ViewBag.Classes as List<ASM2_KSTH.Models.Class>)
-            {
-                <option value="@(@class.ClassId)">@(@class.ClassName)</option>
-            }
-        </select>
-    </div>
+				@foreach (var @class in ViewBag.Classes as List<ASM2_KSTH.Models.Class>)
+				{
+					<option value="@(@class.ClassId)">@(@class.ClassName)</option>
+				}
+			</select>
+		</div>
+   <button type="submit" class="btn btn-primary">Add Student to Class</button>
 
-    <button type="submit" class="btn btn-primary">Add Student to Class</button>
+	</div>
+</div>
 </form>

@@ -26,7 +26,6 @@ namespace ASM2_KSTH.Controllers
         }
 
         #region Login for Student
-        
         // GET: Students
         [HttpGet]
         public IActionResult Index(string? ReturnUrl)
@@ -35,7 +34,6 @@ namespace ASM2_KSTH.Controllers
             ViewData["ReturnUrl"] = ReturnUrl;
             return View();
         }
-
 
         // POST: Students
         [HttpPost]
@@ -48,7 +46,8 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
                     ViewBag.ErrorMessage = "Invalid username or password.";
-                    return View("Index", model);
+               
+                return View("Index", model);
 
                 }
                 else
@@ -68,21 +67,78 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
+                     TempData["ok"] = "Student registered successfully!";
 
-                    if (Url.IsLocalUrl(ReturnUrl))
+                if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
                     else
                     {
-                        return RedirectToAction("ViewScheduleST", "Schedules");
+
+                        return RedirectToAction("DashBoard", "Students");
                     }
                 }
-
             return View();
         }
-        #endregion
+		#endregion
+	
+		#region Change password for Student
+		[HttpGet]
+        [Authorize(Roles = "Students")]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
 
+        [HttpPost]
+       
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword, string confirmNewPassword)
+        {
+            if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmNewPassword))
+            {
+				TempData["no"] = "Please fill in all required fields.";
+                return View();
+            }
+
+            // Get the currently logged-in user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Home"); // Or another action for unauthorized access
+            }
+
+            var student = await _context.Students.FindAsync(int.Parse(userId));
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // Validate old password
+            if (student.Password != oldPassword.ToMd5Hash(student.RandomKey))
+            {
+				TempData["no"] = "The old password is incorrect.";
+                return View();
+            }
+
+            // Validate new password and confirmation
+            if (newPassword != confirmNewPassword)
+            {
+				TempData["no"] = "The new password and confirmation password do not match.";
+                return View();
+            }
+
+            // Update password
+            student.Password = newPassword.ToMd5Hash(student.RandomKey);
+            _context.Update(student);
+            await _context.SaveChangesAsync();
+
+            TempData["ok"] = "Password changed successfully!";
+            return RedirectToAction("DashBoard", "Students");
+        }
+
+        #endregion
 
         #region Profile for Student
 
@@ -174,11 +230,12 @@ namespace ASM2_KSTH.Controllers
 
                 _context.Update(student);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Edit Profile Student Successful !";
 
                 ViewBag.StudentName = student.Name;
                 ViewBag.StudentEmail = student.Email;
 
-                return RedirectToAction("StudentPage", "Students");
+                return RedirectToAction("DashBoard", "Students");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -199,18 +256,110 @@ namespace ASM2_KSTH.Controllers
 
         #endregion
 
+        #region List student to class
+        [Authorize(Roles = "Students")]
+        public async Task<IActionResult> ListStudentinClass(int studentId)
+        {
+            // Find the student by StudentId
+            var student = await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Class)
+                .ThenInclude(c => c.Course)
+                .FirstOrDefaultAsync(s => s.StudentId == studentId);
 
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // Get all class IDs for the student's enrollments
+            var classIds = student.Enrollments.Select(e => e.ClassId).ToList();
+
+            // Get all students in those classes
+            var studentsInClasses = await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Class)
+                .ThenInclude(c => c.Course)
+                .Where(s => s.Enrollments.Any(e => classIds.Contains(e.ClassId)))
+                .ToListAsync();
+
+            // Prepare the view model for displaying students in class
+            var studentInClassViewModels = studentsInClasses.Select(s => new StudentInClassViewModel
+            {
+                StudentId = s.StudentId,
+                StudentName = s.Name,
+                ClassId = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).ClassId,
+                ClassName = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.ClassName,
+                CourseId = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.CourseId.Value,
+                CourseName = s.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.Course.CourseName
+            }).ToList();
+
+            ViewBag.StudentName = student.Name;
+            ViewBag.ClassName = student.Enrollments.FirstOrDefault(e => classIds.Contains(e.ClassId)).Class.ClassName;
+
+            return View(studentInClassViewModels);
+        }
+        #endregion
+
+        #region Check attendance
+        [Authorize(Roles = "Students")]
+        public async Task<IActionResult> CheckAttendance()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Students");
+            }
+
+            var studentId = int.Parse(userId);
+            var attendanceStatuses = await _context.Attendance
+                .Where(a => a.StudentId == studentId)
+                .Select(a => new AttendanceStatusViewModel
+                {
+                    ClassId = a.ClassId,
+                    ClassName = a.Class.ClassName,
+                    CourseName = a.Class.Course.CourseName,
+                    AttendanceStatus = a.AttendanceStatus,
+                    Numses = a.Class.Course.NumSessions.FirstOrDefault(ns => ns.NumId == a.NumId).Numses,
+                    Reason = a.Reason,
+                    AttendanceDate = a.AttendanceDate.ToDateTime(new TimeOnly(0, 0))
+                })
+                .ToListAsync();
+
+            return View(attendanceStatuses);
+        }
+        #endregion
+
+        #region Logout
         [Authorize(Roles = "Students")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
+            TempData["ok"] = "See You Again !";
             return Redirect("/");
         }
+        #endregion
 
-        [Authorize(Roles = "Students")]
-        public ActionResult StudentPage()
+        #region Dash board
+        public async Task<IActionResult> Dashboard()
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var studentId = int.Parse(userId);
+            var studentName = await _context.Students
+                                .Where(a => a.StudentId == studentId)
+                                .Select(a => a.Name)
+                                .FirstOrDefaultAsync();
+            ViewBag.StudentName = studentName;
+            return View();
+        }
+        #endregion
+
+        #region FAQ
+        public IActionResult FAQ()
         {
             return View();
         }
+        #endregion
     }
 }

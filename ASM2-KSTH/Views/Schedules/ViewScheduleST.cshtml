@@ -2,13 +2,12 @@
 
 @{
     ViewData["Title"] = "Student Schedule";
+    Layout = "~/Views/Shared/LayoutStudent.cshtml";
 }
 
 <h1>Student Schedule</h1>
 
-<div class="timetable-img text-center">
-    <img src="img/content/timetable.png" alt="">
-</div>
+
 <div class="table-responsive">
     <table class="table table-bordered text-center">
         <thead>
@@ -16,7 +15,7 @@
                 <th>TIME</th>
                 @foreach (var day in Model.DaysOfWeek)
                 {
-                    <th class="text-uppercase">@(DateTime.Parse(day).ToString("dddd"))  <br /> @day </th>
+                    <th class="text-uppercase">@(DateTime.Parse(day).ToString("dddd"))  <br /> <div class="font-size13 text-light-gray">@day</div> </th>
                 }
             </tr>
         </thead>

@@ -190,6 +190,7 @@ namespace ASM2_KSTH.Controllers
                 }
                 _context.Update(schedule);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Edit successful!";
                 return RedirectToAction("Index", "Schedules");
             }
             catch (DbUpdateConcurrencyException)
@@ -245,6 +246,7 @@ namespace ASM2_KSTH.Controllers
             var schedule = await _context.Schedules.FindAsync(id);
             _context.Schedules.Remove(schedule);
             await _context.SaveChangesAsync();
+            TempData["ok"] = "Delete successful!";
             return RedirectToAction("Index", "SChedules");
         }
         #endregion
@@ -283,6 +285,7 @@ namespace ASM2_KSTH.Controllers
                 if (!enrollments.Any())
                 {
                     ModelState.AddModelError("", "No enrollments found for the selected class.");
+                    TempData["no"] = "No Student In classs";
                     ViewBag.ClassId = new SelectList(_context.Classes, "ClassId", "ClassId", model.ClassId);
                     return View(model);
                 }
@@ -299,7 +302,7 @@ namespace ASM2_KSTH.Controllers
 
                 _context.Schedules.AddRange(schedules);
                 await _context.SaveChangesAsync();
-
+                TempData["ok"] = "Add successful!";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -325,6 +328,7 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
         #region View Schedule Student
+        [Authorize(Roles = "Students")]
         [HttpGet]
         public async Task<IActionResult> ViewScheduleST(int page = 1)
         {
@@ -379,7 +383,8 @@ namespace ASM2_KSTH.Controllers
 
         #endregion
 
-
+        #region View Schedule Teacher
+        [Authorize(Roles = "Teachers")]
         [HttpGet]
         public async Task<IActionResult> ViewScheduleTE(int page = 1)
         {
@@ -393,7 +398,7 @@ namespace ASM2_KSTH.Controllers
             var teacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(teacherId, out int parsedTeacherId))
             {
-                return View("Error"); // Trả về trang lỗi nếu studentId không hợp lệ
+                return View("Error"); 
             }
 
             var slots = await _context.Slots.ToListAsync();
@@ -432,5 +437,7 @@ namespace ASM2_KSTH.Controllers
 
             return View(model);
         }
+
+        #endregion
     }
 }

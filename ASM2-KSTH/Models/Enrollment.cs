@@ -1,3 +1,4 @@
+
 using System.Linq;
 using ASM2_KSTH.ViewModels;
 using System.Diagnostics;
@@ -21,4 +22,7 @@ public partial class Enrollment
 
 	public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
+    public virtual ICollection<Attendance> Attendance { get; set; } = new List<Attendance>();
+
+   
 }

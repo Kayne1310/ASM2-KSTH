@@ -18,7 +18,7 @@ namespace ASM2_KSTH.Models
 		public virtual Course Courses { get; set; }
 		public int RoomId { get; set; }	
 		public virtual Room Rooms { get; set; }
-		public int TeacherId { get; set; }
+		public int? TeacherId { get; set; }
 		public virtual Teacher Teachers { get;	set; }
 
     }

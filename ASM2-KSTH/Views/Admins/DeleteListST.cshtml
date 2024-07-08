@@ -19,7 +19,7 @@
             @Html.DisplayNameFor(model => model.DateOfBirth)
         </dt>
         <dd class="col-sm-10">
-            @(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd/MM/yyyy") : "N/A")
+            @(Model.DateOfBirth.ToShortDateString())
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Address)

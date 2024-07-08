@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ASM2_KSTH.ViewModels.StudentViewModel>
+
+@{
+    ViewData["Title"] = "Attendance";
+    Layout = "~/Views/Shared/LayoutTeacher.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <form asp-action="Save" asp-controller="Attendances">
+                <table id="example2" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>StudentId</th>
+                            <th>Major</th>
+                            <th>Attendance</th>
+                            <th>Session</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model)
+                        {
+                            <tr>
+                                <td>@student.Name</td>
+                                <td>@student.StudentId</td>
+                                <td>@student.MajorName</td>
+                                <td>
+                                    <select name="students[@student.EnrollmentId].AttendanceStatus">
+                                        <option value="present">Present</option>
+                                        <option value="absent">Absent</option>
+                                        <option value="late">Late</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="students[@student.EnrollmentId].NumId" style="width: 50px;">
+                                        @foreach (var numses in student.Numses)
+                                        {
+                                            <option value="@numses.NumId">@numses.Numses</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="students[@student.EnrollmentId].Reason" />
+                                    <input type="hidden" name="students[@student.EnrollmentId].TeacherId" value="@student.TeacherId" />
+                                    <input type="hidden" name="students[@student.EnrollmentId].RoomId" value="@student.RoomId" />
+                                   
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <button type="submit" class="btn btn-success px-4 raised d-flex gap-2">
+                    <i class="material-icons-outlined">check_circle</i>Save
+                </button>
+
+                <p>
+                    <a asp-controller="Attendances" asp-action="index">
+                        <button type="button" class="btn btn-warning px-5">Back</button>
+                    </a>
+                </p>
+
+                <style>
+                    button.btn-success {
+                        margin-left: calc(95% - 95px);
+                    }
+
+                    td select option[value="present"] {
+                        color: green;
+                    }
+
+                    td select option[value="absent"] {
+                        color: red;
+                    }
+
+                    td select option[value="late"] {
+                        color: orange;
+                    }
+                </style>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable({
+                lengthChange: false,
+                buttons: ['copy', 'excel', 'pdf', 'print']
+            });
+        });
+    </script>
+}

@@ -24,6 +24,8 @@ namespace ASM2_KSTH.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Index()
         {
+
+
             var classEntities = await _context.Classes
                 .Include(c => c.Room)
                 .Include(c => c.Teacher)
@@ -41,7 +43,9 @@ namespace ASM2_KSTH.Controllers
                 Room = classEntity.Room?.RoomNumber,
                 Teacher = classEntity.Teacher?.Name,
                 StudentCount = classEntity.Enrollments.Count(e => e.Student != null),
-                CourseName = classEntity.Course?.CourseName
+                CourseName = classEntity.Course?.CourseName,
+              
+
             }).ToList();
 
 
@@ -121,6 +125,7 @@ namespace ASM2_KSTH.Controllers
                 try
                 {
                     _context.Update(classEntity);
+                    TempData["ok"] = "Edit Class Successful!";
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -254,6 +259,7 @@ namespace ASM2_KSTH.Controllers
                     // Add the new Class entity to the context and save changes
                     _context.Classes.Add(newClass);
                     await _context.SaveChangesAsync();
+                    TempData["ok"] = "Create Class Successfull !";
 
                     // Redirect to Index action after successful creation
                     return RedirectToAction(nameof(Index));
@@ -293,11 +299,70 @@ namespace ASM2_KSTH.Controllers
             {
                 _context.Rooms.Add(room);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Create Room Sucessfull!";
                 return RedirectToAction(nameof(ListRoom));
             }
 
             return View(room);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRoom(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var room = await _context.Rooms.FindAsync(id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            return View(room);
+        }
+
+        // POST: Room/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRoom(int id, [Bind("RoomId,RoomNumber")] Room room)
+        {
+            if (id != room.RoomId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(room);
+                    await _context.SaveChangesAsync();
+                    TempData["ok"] = "Room updated successfully!";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RoomExists(room.RoomId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("ListRoom","Classes");
+            }
+            return View(room);
+        }
+
+        private bool RoomExists(int id)
+        {
+            return _context.Rooms.Any(e => e.RoomId == id);
+        }
+
+
 
 
 
@@ -308,6 +373,10 @@ namespace ASM2_KSTH.Controllers
         }
 
        
+
+
+
+
 
         private bool ClassExists(int id)
         {

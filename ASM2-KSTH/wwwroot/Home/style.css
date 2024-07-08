@@ -49,16 +49,12 @@ table {
 
 /* css */
 
-body{
-  
+body {
     max-width: 1408px;
-    margin: 0 auto;
-    font-family:"Josefin Sans", sans-serif;
+    margin: 0 auto !important ;
+    font-family: "Josefin Sans", sans-serif;
     
     line-height: inherit;
-
-    
-    
 }
 header{
     max-width: 1408;
@@ -113,10 +109,7 @@ margin-left: 120px;
 .menu a{
   text-decoration: none;
 }
-.menu .Login{
-  margin-right: 22px;
- 
-}
+
 .menu img{
   width: 32px;
   height: 32px;

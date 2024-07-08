@@ -53,6 +53,8 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
                     ViewBag.ErrorMessage = "Invalid username or password.";
+                     TempData["no"] = "Invalid username or password.";
+              
                     return View("Index", model);
 
                 }
@@ -71,17 +73,17 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
+                    TempData["ok"] = "Teacher logged in successfully!";
 
-                    if (Url.IsLocalUrl(ReturnUrl))
+
+                if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
                     else
                     {
 
-                     
-
-                        return RedirectToAction("TeacherPage", "Teachers");
+                        return RedirectToAction("DashBoard", "Teachers");
 
                     }
 
@@ -89,8 +91,78 @@ namespace ASM2_KSTH.Controllers
                 return View();
 
         }
+		#endregion
+
+		#region Change password for Teacher
+		[HttpGet]
+		[Authorize(Roles = "Teachers")]
+		public IActionResult ChangePassword()
+		{
+			return View();
+		}
+
+		[HttpPost]
+	
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword, string confirmNewPassword)
+		{
+			if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmNewPassword))
+			{
+				TempData["no"] = "Please fill in all required fields.";
+				return View();
+			}
+
+			// Get the currently logged-in user
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null)
+			{
+				return RedirectToAction("Index", "Home"); // Or another action for unauthorized access
+			}
+
+			var teacher = await _context.Teachers.FindAsync(int.Parse(userId));
+			if (teacher == null)
+			{
+				return NotFound();
+			}
+
+			// Validate old password
+			if (teacher.Password != oldPassword.ToMd5Hash(teacher.RandomKey))
+			{
+				TempData["no"] = "The old password is incorrect.";
+				return View();
+			}
+
+			// Validate new password and confirmation
+			if (newPassword != confirmNewPassword)
+			{
+				TempData["no"] = "The new password and confirmation password do not match.";
+				return View();
+			}
+
+			// Update password
+			teacher.Password = newPassword.ToMd5Hash(teacher.RandomKey);
+			_context.Update(teacher);
+			await _context.SaveChangesAsync();
+
+			TempData["ok"] = "Password changed successfully!";
+			return RedirectToAction("DashBoard", "Teachers");
+		}
+
         #endregion
 
+        #region Dash board
+        public async Task<IActionResult> DashBoard()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var teacherId = int.Parse(userId);
+            var teachername = await _context.Teachers
+                                .Where(a => a.TeacherId == teacherId)
+                                .Select(a => a.Name)
+                                .FirstOrDefaultAsync();
+            ViewBag.TeacherName = teachername;
+            return View();
+        }
+        #endregion
 
         #region Profile for Teacher
 
@@ -163,11 +235,11 @@ namespace ASM2_KSTH.Controllers
 
                 _context.Update(teacher);
                 await _context.SaveChangesAsync();
-
+                TempData["ok"] = "Edit Profile Teacher Sucessful";
                 ViewBag.TeacherName = teacher.Name;
                 ViewBag.TeacherEmail = teacher.Email;
 
-                return RedirectToAction("TeacherPage", "Teachers"); //// 
+                return RedirectToAction("DashBoard", "Teachers"); //// 
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -185,18 +257,23 @@ namespace ASM2_KSTH.Controllers
 
         #endregion
 
+        #region Logout
         [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Logout()
         {
+
             await HttpContext.SignOutAsync();
+            TempData["ok"] = "See you again !";
             return Redirect("/");
         }
+        #endregion
 
-        [Authorize(Roles = "Teachers")]
-        public IActionResult TeacherPage()
+        #region FAQ
+        public IActionResult FAQ()
         {
             return View();
         }
+        #endregion
 
     }
 }

@@ -23,7 +23,7 @@ namespace ASM2_KSTH.ViewModels
         public string CourseName { get; set; }
         public int RoomId { get; set; }
         public string RoomNumber { get; set; }
-        public int TeacherId { get; set; }
+        public int? TeacherId { get; set; }
         public string Name { get; set; }
         public int EnrollmentId { get; set; }
 

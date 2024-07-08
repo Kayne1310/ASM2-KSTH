@@ -148,7 +148,7 @@ namespace ASM2_KSTH.Controllers.Grade
                 grade.Grade1 = model.Grade1;
                 _context.Update(grade);
                 await _context.SaveChangesAsync();
-
+                TempData["ok"] = "Edit Grade Successful!";
                 return RedirectToAction("ListStudents", new { classId = classId });
             }
             catch (DbUpdateConcurrencyException)
@@ -208,6 +208,7 @@ namespace ASM2_KSTH.Controllers.Grade
 
                 _context.Add(newGrade);
                 await _context.SaveChangesAsync();
+                TempData["ok"] = "Add Grade Successful!";
                 return RedirectToAction("ListStudents", new { classId = classId });
             }
             catch (DbUpdateConcurrencyException)
@@ -222,6 +223,50 @@ namespace ASM2_KSTH.Controllers.Grade
             return View(model);
         }
 
+        [Authorize(Roles = "Students")]
+        public async Task<IActionResult> StudentGrades(int studentId)
+        {
+            var student = await _context.Students
+          .Include(s => s.Enrollments)
+          .ThenInclude(e => e.Class)
+          .ThenInclude(c => c.Course)
+          .Include(s => s.Enrollments)
+          .ThenInclude(e => e.Grades)  // Ensure Grades are included
+          .FirstOrDefaultAsync(s => s.StudentId == studentId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var model = new StudentGradesViewModel
+            {
+                StudentId = student.StudentId,
+                StudentName = student.Name,
+                Grades = student.Enrollments.Select(e => new GradesViewModels
+                {
+                    GradeId = e.Grades.FirstOrDefault()?.GradeId ?? 0,
+                    CourseName = e.Class.Course.CourseName,
+                    Grade1 = e.Grades.FirstOrDefault()?.Grade1 ?? null  
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+     
+        public async Task<IActionResult> Delete(int id)
+        {
+            var grade = await _context.Grades.FindAsync(id);
+            if (grade == null)
+            {
+                return NotFound();
+            }
+
+            return View(grade);
+        }
+
+       
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -229,12 +274,13 @@ namespace ASM2_KSTH.Controllers.Grade
             var grade = await _context.Grades.FindAsync(id);
             if (grade != null)
             {
+                TempData["ok"] = "Delete Grade Successfull !";
                 _context.Grades.Remove(grade);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
-
 
     }
 

@@ -13,6 +13,8 @@ using ASM2_KSTH.Helpers;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing;
+using NuGet.DependencyResolver;
+using System.Linq;
 
 
 namespace ASM2_KSTH.Controllers
@@ -46,6 +48,11 @@ namespace ASM2_KSTH.Controllers
 
         public async Task<IActionResult> Dashboard()
         {
+            ViewBag.TeacherCount = await _context.Teachers.CountAsync();
+            ViewBag.StudentCount = await _context.Students.CountAsync();
+            ViewBag.ClassCount = await _context.Classes.CountAsync();
+            ViewBag.RoomCount = await _context.Rooms.CountAsync();
+            ViewBag.CourseCount = await _context.Courses.CountAsync();
             return View();
         }
     
@@ -71,7 +78,8 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Xác thực thất bại, đặt thông báo lỗi vào ViewBag và hiển thị lại form đăng nhập
                     ViewBag.ErrorMessage = "Invalid username or password.";
-                    return View("Index", model);
+                
+                   return View("Index", model);
 
                 }
                 else
@@ -88,8 +96,9 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
+                TempData["ok"] = "Welcome Back Admin!";
 
-                    if (Url.IsLocalUrl(ReturnUrl))
+                if (Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
@@ -102,7 +111,6 @@ namespace ASM2_KSTH.Controllers
         }
         #endregion
 
-
         #region Register for Student
         [Authorize(Roles = "Admins")]
         [HttpGet]
@@ -112,7 +120,6 @@ namespace ASM2_KSTH.Controllers
             ViewBag.Majors = _context.Majors.ToList();
             return View();
         }
-
 
         [HttpPost]
         public IActionResult SignupST(StudentRegister model, string? ReturnUrl)
@@ -126,29 +133,32 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
                     ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                    TempData["no"]="Username already exists. Please choose a different username.";
+                   
                     return View();
                 }
                 // Truy vấn cơ sở dữ liệu để lấy MajorId dựa trên MajorName
                 var major = _context.Majors.FirstOrDefault(m => m.MajorName == model.MajorName);
-				if (major == null)
-                    {
-                        // Xử lý trường hợp không tìm thấy MajorName
-                        return NotFound();
-                    }
+                if (major == null)
+                {
+                    // Xử lý trường hợp không tìm thấy MajorName
+                    return NotFound();
+                }
 
-                    // Map dữ liệu từ model sang đối tượng Student
-                    var student = _mapper.Map<Student>(model);
-                    student.RandomKey = MyUtil.GenerateRandomKey();
-                    student.Password = model.Password.ToMd5Hash(student.RandomKey);
-                    student.RoleId = model.RoleId;
-                    student.MajorId = major.MajorId;
+                // Map dữ liệu từ model sang đối tượng Student
+                var student = _mapper.Map<Student>(model);
+                student.RandomKey = MyUtil.GenerateRandomKey();
+                student.Password = model.Password.ToMd5Hash(student.RandomKey);
+                student.RoleId = model.RoleId;
+                student.MajorId = major.MajorId;
 
-                    // Thêm sinh viên mới vào cơ sở dữ liệu
-                    _context.Students.Add(student);
-                    _context.SaveChanges();
-                    return RedirectToAction("AdminPage", "Admins");
+                // Thêm sinh viên mới vào cơ sở dữ liệu
+                _context.Students.Add(student);
+                _context.SaveChanges();
+                TempData["ok"] = "Create Student Successful!";
+                return RedirectToAction("AdminPage", "Admins");
             }
-            
+
             catch (Exception ex)
             {
                 var mess = $"{ex.Message} shh";
@@ -156,11 +166,10 @@ namespace ASM2_KSTH.Controllers
             }
             return View();
         }
-		#endregion
+        #endregion
 
-
-		#region Register for Teacher
-		[Authorize(Roles = "Admins")]
+        #region Register for Teacher
+        [Authorize(Roles = "Admins")]
 		[HttpGet]
         public IActionResult SignupTE(string? ReturnUrl)
         {
@@ -181,6 +190,7 @@ namespace ASM2_KSTH.Controllers
                 {
                     // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
                     ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                    TempData["no"] = "Username already exists. Please choose a different username.";
                     return View();
                 }
                 var teacher = new Teacher
@@ -201,6 +211,7 @@ namespace ASM2_KSTH.Controllers
                 // Thêm giáo viên mới vào cơ sở dữ liệu
                 _context.Teachers.Add(teacher);
                 _context.SaveChanges();
+                TempData["ok"] = "Create Teacher Successfull!";
                 return RedirectToAction("AdminPage", "Admins");
             }
 
@@ -215,7 +226,6 @@ namespace ASM2_KSTH.Controllers
 
 
         #endregion
-
 
         #region List of Student
         [Authorize(Roles = "Admins")]
@@ -269,7 +279,6 @@ namespace ASM2_KSTH.Controllers
 			}
 		}
 		#endregion
-
 
 		#region Edit list student
 		[Authorize(Roles = "Admins")]
@@ -367,8 +376,9 @@ namespace ASM2_KSTH.Controllers
 
                     _context.Update(student);
                     await _context.SaveChangesAsync();
-
-                    return RedirectToAction("ListStudent","Admins");   
+                    TempData["ok"] = "Edit Student Successfull!";
+    
+                     return RedirectToAction("ListStudent","Admins");   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -387,40 +397,98 @@ namespace ASM2_KSTH.Controllers
 
 		#endregion
 
-
 		#region Delete All Info Student
 		[Authorize(Roles = "Admins")]
-		[HttpGet]
-		public async Task<IActionResult> DeleteListST(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
+        [HttpGet]
+        public async Task<IActionResult> DeleteListST(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-			var student = await _context.Students
-				.Include(s => s.Major)
-				.Include(s => s.Roles)
-				.FirstOrDefaultAsync(m => m.StudentId == id);
-			if (student == null)
-			{
-				return NotFound();
-			}
-			return View(student);
-		}
+            var student = await _context.Students
+                .Include(s => s.Roles)
+                .FirstOrDefaultAsync(m => m.StudentId == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
 
-		[HttpPost, ActionName("DeleteListST")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeleteConfirmedST(int id)
+            return View(student);
+        }
+        [HttpPost, ActionName("DeleteListST")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmedST(int? id)
 		{
-			var student = await _context.Students.FindAsync(id);
-			_context.Students.Remove(student);
-			await _context.SaveChangesAsync();
-			return RedirectToAction("ListStudent", "Admins");
-		}
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                TempData["error"] = "Student not found!";
+                return RedirectToAction("ListStudent", "Admins");
+            }
+            _context.Students.Remove(student);
+
+            // Remove related enrollment if necessary
+            var enrollment = await _context.Enrollments
+                .Where(c => c.StudentId == id) // Assuming you have a StudentId field in the enrollment entity
+                .ToListAsync();
+            if (enrollment != null)
+            {
+                _context.Enrollments.RemoveRange(enrollment);
+            }
+
+            // Find enrollments related to the student and delete associated grades
+            var enrollments = await _context.Enrollments
+                .Where(e => e.StudentId == id) // Assuming StudentId field exists in Enrollments entity
+                .ToListAsync();
+
+            if (enrollments != null && enrollments.Count > 0)
+            {
+                var enrollmentIds = enrollments.Select(e => e.EnrollmentId).ToList();
+
+                var grades = await _context.Grades
+                    .Where(g => enrollmentIds.Contains((int)g.EnrollmentId)) // Assuming EnrollmentId field exists in Grades entity
+                    .ToListAsync();
+
+                if (grades != null && grades.Count > 0)
+                {
+                    _context.Grades.RemoveRange(grades);
+                }
+
+                // Optionally remove the enrollments themselves if needed
+                _context.Enrollments.RemoveRange(enrollments);
+            }
+            // Remove related grade if necessary
+            var schedule = await _context.Schedules
+                .Where(c => c.Enrollments.StudentId == id) // Assuming you have a EnrollmentId field in the grade entity
+                .ToListAsync();
+            if (schedule != null)
+            {
+                _context.Schedules.RemoveRange(schedule);
+            }
+
+            // Set StudentId to null in related attendance
+            var attendance = await _context.Attendance
+                .Where(c => c.StudentId == id)
+                .ToListAsync();
+            if (attendance != null)
+            {
+                foreach (var attendance1 in attendance)
+                {
+                    attendance1.StudentId = null;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["ok"] = "Delete Student Successfully!";
+            return RedirectToAction("ListStudent", "Admins");
+
+        }
+
+
 
 		#endregion
-
 
 		#region List of Teacher
 		[Authorize(Roles = "Admins")]
@@ -466,7 +534,6 @@ namespace ASM2_KSTH.Controllers
 			}
 		}
 		#endregion
-
 
 		#region Edit list teacher
 		[Authorize(Roles = "Admins")]
@@ -541,8 +608,9 @@ namespace ASM2_KSTH.Controllers
 
 				_context.Update(teacher);
 				await _context.SaveChangesAsync();
+                TempData["ok"] = "Edit Teacher Successfull!";
 
-				return RedirectToAction("ListTeacher", "Admins");
+                return RedirectToAction("ListTeacher", "Admins");
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -558,7 +626,6 @@ namespace ASM2_KSTH.Controllers
 			return View(model);
 		}
 		#endregion
-
 
 		#region Delete All Info Teacher
 		[Authorize(Roles = "Admins")]
@@ -586,16 +653,60 @@ namespace ASM2_KSTH.Controllers
         public async Task<IActionResult> DeleteConfirmedTE(int id)
         {
             var teacher = await _context.Teachers.FindAsync(id);
+            if (teacher == null)
+            {
+                TempData["error"] = "Teacher not found!";
+                return RedirectToAction("ListTeacher", "Admins");
+            }
+
+            // Set TeacherId to null in related classes
+            var classes = await _context.Classes
+                .Where(c => c.TeacherId == id)
+                .ToListAsync();
+            if (classes != null)
+            {
+                foreach (var classItem in classes)
+                {
+                    classItem.TeacherId = null;
+                }
+            }
+
+            // Set TeacherId to null in related schedules
+            var schedules = await _context.Schedules
+                .Where(s => s.TeacherId == id)
+                .ToListAsync();
+            if (schedules != null)
+            {
+                foreach (var schedule in schedules)
+                {
+                    schedule.TeacherId = null;
+                }
+            }
+
+            // Set TeacherId to null in related attendances
+            var attendances = await _context.Attendance
+                .Where(s => s.TeacherId == id)
+                .ToListAsync();
+            if (attendances != null)
+            {
+                foreach (var attendance in attendances)
+                {
+                    attendance.TeacherId = null;
+                }
+            }
+
             _context.Teachers.Remove(teacher);
             await _context.SaveChangesAsync();
+
+            TempData["ok"] = "Delete Teacher Successfully!";
             return RedirectToAction("ListTeacher", "Admins");
         }
 
-		#endregion
 
+        #endregion
 
-		#region List student to class
-		[Authorize(Roles = "Admins")]
+        #region List student to class
+        [Authorize(Roles = "Admins")]
 		[HttpGet]
         public async Task<IActionResult> ListStudentToClass()
         {
@@ -614,7 +725,6 @@ namespace ASM2_KSTH.Controllers
         }
 		#endregion
 
-
 		#region Add student to class
 		[Authorize(Roles = "Admins")]
 		[HttpPost]
@@ -622,8 +732,10 @@ namespace ASM2_KSTH.Controllers
         {
             var enrollment = new Enrollment { StudentId = studentId, ClassId = classId };
             _context.Enrollments.Add(enrollment);
+            TempData["ok"] = "Add Student To Class Sucessfull!";
             await _context.SaveChangesAsync();
-            return RedirectToAction("ListStudentToClass", "Admins", new { classId = classId });
+
+            return RedirectToAction("ListStudentToClass", "Admins");
         }
         [HttpGet]
         public async Task<IActionResult> AddStudentToClass(int studentId)
@@ -647,15 +759,61 @@ namespace ASM2_KSTH.Controllers
 
             return View();
         }
-        #endregion 
+        #endregion
 
+        #region Create session
+        [HttpGet]
+        public async Task<IActionResult> CreateSession()
+        {
+            var coursesWithoutNumId = await _context.Courses
+             .Where(c => c.NumSessions.All(ns => ns.NumId == null))
+            .ToListAsync();
+            ViewBag.Courses = new SelectList(coursesWithoutNumId, "CourseId", "CourseName");
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateSession(int numses, int courseId)
+        {
+            if (numses <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "Numses must be a positive number.");
+                return View();
+            }
 
+            for (int i = 1; i <= numses; i++)
+            {
+                var session = new NumSession
+                {
+                    Numses = i.ToString(),
+                    CourseId = courseId
+                };
+
+                _context.Num_Session.Add(session);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["ok"] = $"{numses} sessions created successfully.";
+            return RedirectToAction("Index", "Courses"); 
+        }
+        #endregion
+
+        #region Logout
         [Authorize(Roles ="Admins")]
         public async Task<IActionResult> Logout()
 
         {
             await HttpContext.SignOutAsync();
+            TempData["ok"] = "See you again!";
             return Redirect("/");
         }
+        #endregion
+
+        #region FAQ
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+        #endregion
     }
 }

@@ -26,8 +26,10 @@ namespace ASM2_KSTH.Data
         public DbSet<Roles> Roles { get; set; }
 		public DbSet<Schedule> Schedules { get; set; }
 		public DbSet<Slot> Slots { get; set; }
+        public DbSet<NumSession> Num_Session { get; set; }
+        public DbSet<Attendance> Attendance { get; set; }
 
-
+        public object Schedule { get; internal set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,25 +70,7 @@ namespace ASM2_KSTH.Data
 
             base.OnModelCreating(modelBuilder);
 
-            // Cấu hình bảng Student
-            modelBuilder.Entity<Student>(entity =>
-            {
-                entity.HasKey(e => e.StudentId);
-                entity.Property(e => e.Name)
-                    .HasMaxLength(100)
-                    .IsRequired(false);
 
-                // Cấu hình khóa ngoại
-                entity.HasOne(e => e.Roles)
-                    .WithMany()
-                    .HasForeignKey(e => e.RoleId)
-                    .IsRequired();
-
-                entity.HasOne(e => e.Major)
-				    .WithMany(m => m.Students)
-					.HasForeignKey(s => s.MajorId)
-                    .IsRequired();
-			});
 
 			// Cấu hình bảng Teacher
 			modelBuilder.Entity<Teacher>(entity =>
@@ -118,8 +102,9 @@ namespace ASM2_KSTH.Data
                     .IsRequired();
             });
 
-
         }
+     
+        
 
     }
 

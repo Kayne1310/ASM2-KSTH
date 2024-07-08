@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"]</title>
     <!--favicon-->
-    <link rel="icon" href="~/assets/images/favicon-32x32.png" type="image/png">
+    <link rel="icon" href="~/assets/images/logoksth.jpg" type="image/png">
 
     <!--plugins-->
     <link href="~/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
@@ -22,6 +22,8 @@
     <link href="~/sass/main.css" rel="stylesheet">
     <link href="~/sass/dark-theme.css" rel="stylesheet">
     <link href="~/sass/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />
+
 </head>
 <body>
     <div class="container-fluid my-5">
@@ -29,10 +31,11 @@
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-5 mx-auto">
                 <div class="card rounded-4">
                     <div class="card-body p-5">
-                        <img src="~/assets/images/logo1.png" class="mb-4" width="145" alt="">
-                        <h4 class="fw-bold">Register for Teacher</h4>
+                        <div class="justify-content-center" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                        <img src="~/assets/images/logoksth.jpg" class="mb-4" width="145" alt="">
+                        <h4 class="fw-bold" style="font-size:2rem;">Register for Teacher</h4>
                         <p class="mb-0">Enter your credentials to create your account</p>
-
+                        </div>
                         <div class="form-body my-4">
                             <form asp-action="SignupTE" asp-route-returnurl="@ViewBag.ReturnUrl" class="row g-3">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -40,25 +43,25 @@
                                 <div class="col-12">
                                     <label asp-for="Name" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Name" class="form-control">
+                                    <input asp-for="Name" class="form-control" required>
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Address" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Address" class="form-control">
+                                    <input asp-for="Address" class="form-control" required>
                                     <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Email" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Email" class="form-control">
+                                    <input asp-for="Email" class="form-control" required>
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="PhoneNumber" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="PhoneNumber" class="form-control">
+                                    <input asp-for="PhoneNumber" class="form-control" required>
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
@@ -67,14 +70,14 @@
                                 <div class="col-12">
                                     <label asp-for="Username" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Username" class="form-control">
+                                    <input asp-for="Username" class="form-control" required>
                                     <span asp-validation-for="Username" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Password" class="form-label"></label>
                                     <sup>*</sup>
                                     <div class="input-group" id="show_hide_password">
-                                        <input asp-for="Password" class="form-control">
+                                        <input asp-for="Password" class="form-control" required>
                                     </div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
@@ -94,5 +97,39 @@
             </div>
         </div><!--end row-->
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+
+    @if (TempData["ok"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $.toast({
+                    heading: 'Notification',
+                    text: "@TempData["ok"]",
+                    showHideTransition: 'slide',
+                    icon: 'success',
+                    position: 'top-center',
+                    hideAfter: 3000
+                });
+            });
+        </script>
+    }
+    else if (TempData["no"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $.toast({
+                    heading: 'Notification',
+                    text: "@TempData["no"]",
+                    showHideTransition: 'slide',
+                    icon: 'error',
+                    position: 'top-center',
+                    hideAfter: 10000
+                });
+            });
+        </script>
+    }
+
+
 </body>
 </html>
