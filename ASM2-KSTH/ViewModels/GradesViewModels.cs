@@ -10,7 +10,7 @@ namespace ASM2_KSTH.ViewModels
 
      
         public decimal? Grade1 { get; set; }
-        public string StudentName { get; set; }
+
         [Required]
         public int SelectedStudentId { get; set; }
 
@@ -19,9 +19,13 @@ namespace ASM2_KSTH.ViewModels
 
         [Required]
         public int SelectedEnrollmentId { get; set; }
+
+		public string StudentName { get; set; }
+
         public string CourseName { get; set; }
 
-        public List<Student> Students { get; set; }  // Danh sách học sinh để chọn
+
+		public List<Student> Students { get; set; }  // Danh sách học sinh để chọn
         public List<Course> Courses { get; set; }    // Danh sách các môn học để chọn
         public List<Class> Classes { get; set; }     // Danh sách các lớp học để chọn
     }

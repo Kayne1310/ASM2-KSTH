@@ -24,13 +24,14 @@ namespace ASM2_KSTH.Data
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Roles> Roles { get; set; }
+		public DbSet<Schedule> Schedules { get; set; }
+		public DbSet<Slot> Slots { get; set; }
         public DbSet<NumSession> Num_Session { get; set; }
-
         public DbSet<Attendance> Attendance { get; set; }
 
         public object Schedule { get; internal set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<Major>()
@@ -71,6 +72,35 @@ namespace ASM2_KSTH.Data
 
 
 
+			// Cấu hình bảng Teacher
+			modelBuilder.Entity<Teacher>(entity =>
+            {
+                entity.HasKey(e => e.TeacherId);
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                // Cấu hình khóa ngoại
+                entity.HasOne(e => e.Roles)
+                    .WithMany()
+                    .HasForeignKey(e => e.RoleId)
+                    .IsRequired();
+            });
+
+            // Cấu hình bảng Admin
+            modelBuilder.Entity<Admin>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Username)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                // Cấu hình khóa ngoại
+                entity.HasOne(e => e.Roles)
+                    .WithMany()
+                    .HasForeignKey(e => e.RoleId)
+                    .IsRequired();
+            });
 
         }
      

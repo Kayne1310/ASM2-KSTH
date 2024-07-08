@@ -14,16 +14,10 @@ public partial class Course
     public int Credits { get; set; }
 
     public int MajorId { get; set; }
-
-    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
-
-    public virtual Major ? Major { get; set; }
-
+    public virtual Major? Major { get; set; }
+	public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+	public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
     public virtual ICollection<NumSession> NumSessions{ get; set; } = new List<NumSession>();
 
-    public virtual ICollection<Schedule1> Schedule1s { get; set; } = new List<Schedule1>();
-    public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
-
-    
-
 }
+

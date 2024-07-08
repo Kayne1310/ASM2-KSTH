@@ -9,13 +9,13 @@ using System.Drawing;
 
 namespace ASM2_KSTH.Controllers
 {
-    public class DiemdanhController : Controller
+    public class AttendancesController : Controller
     {
 
 
         private readonly ASM2_KSTHContext _context;
 
-        public DiemdanhController(ASM2_KSTHContext context)
+        public AttendancesController(ASM2_KSTHContext context)
         {
             _context = context;
         }
@@ -44,7 +44,7 @@ namespace ASM2_KSTH.Controllers
 
     
         [HttpGet]
-        public async Task<IActionResult> Diemdanh(int classId)
+        public async Task<IActionResult> Attendance(int classId)
         {
             var students = await _context.Enrollments
                .Include(e => e.Attendance)
@@ -61,7 +61,7 @@ namespace ASM2_KSTH.Controllers
                    Name = e.Student.Name,
                    ClassName = e.Class.ClassName,
                    MajorName = e.Student.Major.MajorName,
-                   EnrollmentId = e.Id,
+                   EnrollmentId = e.EnrollmentId,
                    AttendanceStatus = e.Attendance.FirstOrDefault() != null ? e.Attendance.FirstOrDefault().AttendanceStatus : null,
                    Reason = e.Attendance.FirstOrDefault() != null ? e.Attendance.FirstOrDefault().Reason : null,
                    AttendanceDate = e.Attendance.FirstOrDefault() != null ? (DateTime?)e.Attendance.FirstOrDefault().AttendanceDate.ToDateTime(new TimeOnly(0, 0)) : null,
@@ -75,7 +75,7 @@ namespace ASM2_KSTH.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Diemdanh(int classId, List<StudentViewModel> postedStudents)
+        public async Task<IActionResult> Attendance(int classId, List<StudentViewModel> postedStudents)
         {
             var students = await _context.Enrollments
                 .Include(e => e.Attendance)
@@ -96,7 +96,7 @@ namespace ASM2_KSTH.Controllers
                     Name = e.Student.Name,
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
-                    EnrollmentId = e.Id,
+                    EnrollmentId = e.EnrollmentId,
                     AttendanceStatus = e.Attendance.FirstOrDefault() != null ? e.Attendance.FirstOrDefault().AttendanceStatus : null,
                     Reason = e.Attendance.FirstOrDefault() != null ? e.Attendance.FirstOrDefault().Reason : null,
                     AttendanceDate = e.Attendance.FirstOrDefault() != null ? (DateTime?)e.Attendance.FirstOrDefault().AttendanceDate.ToDateTime(new TimeOnly(0, 0)) : null,
@@ -137,12 +137,12 @@ namespace ASM2_KSTH.Controllers
                         var roomId = Convert.ToInt32(form[$"students[{enrollmentId}].RoomId"]);
 
                         var enrollment = await _context.Enrollments
-                            .FirstOrDefaultAsync(e => e.Id == enrollmentId);
+                            .FirstOrDefaultAsync(e => e.EnrollmentId == enrollmentId);
 
                         if(numId == 0)
                         {
                             TempData["no"] = $"Failed to save attendance ";
-                            return RedirectToAction("Index", "Diemdanh");
+                            return RedirectToAction("Index", "Attendances");
                         }
                         if (enrollment != null)
                         {
@@ -173,7 +173,7 @@ namespace ASM2_KSTH.Controllers
                                 {
                                     StudentId = studentId,
                                     ClassId = classId,
-                                    EnrollmentId = enrollment.Id,
+                                    EnrollmentId = enrollment.EnrollmentId,
                                     AttendanceStatus = attendanceStatus,
                                     Reason = reason,
                                     AttendanceDate = DateOnly.FromDateTime(attendanceDate),
@@ -191,12 +191,12 @@ namespace ASM2_KSTH.Controllers
 
                 await _context.SaveChangesAsync();
                 TempData["ok"] = "Attendance saved successfully.";
-                return RedirectToAction("Index", "Diemdanh");
+                return RedirectToAction("Index", "Attendances");
             }
             catch (Exception ex)
             {
                 TempData["no"] = $"Failed to save attendance: {ex.Message}";
-                return RedirectToAction("Index", "Diemdanh");
+                return RedirectToAction("Index", "Attendances");
             }
         }
 

@@ -26,7 +26,6 @@ namespace ASM2_KSTH.Controllers
         }
 
         #region Login for Student
-        
         // GET: Students
         [HttpGet]
         public IActionResult Index(string? ReturnUrl)
@@ -35,7 +34,6 @@ namespace ASM2_KSTH.Controllers
             ViewData["ReturnUrl"] = ReturnUrl;
             return View();
         }
-
 
         // POST: Students
         [HttpPost]
@@ -77,17 +75,17 @@ namespace ASM2_KSTH.Controllers
                     }
                     else
                     {
+
                         return RedirectToAction("DashBoard", "Students");
                     }
                 }
-
             return View();
         }
 		#endregion
-
-		[Authorize(Roles = "Students")]
+	
 		#region Change password for Student
 		[HttpGet]
+        [Authorize(Roles = "Students")]
         public IActionResult ChangePassword()
         {
             return View();
@@ -258,6 +256,7 @@ namespace ASM2_KSTH.Controllers
 
         #endregion
 
+        #region List student to class
         [Authorize(Roles = "Students")]
         public async Task<IActionResult> ListStudentinClass(int studentId)
         {
@@ -300,8 +299,9 @@ namespace ASM2_KSTH.Controllers
 
             return View(studentInClassViewModels);
         }
+        #endregion
 
-
+        #region Check attendance
         [Authorize(Roles = "Students")]
         public async Task<IActionResult> CheckAttendance()
         {
@@ -328,8 +328,9 @@ namespace ASM2_KSTH.Controllers
 
             return View(attendanceStatuses);
         }
+        #endregion
 
-
+        #region Logout
         [Authorize(Roles = "Students")]
         public async Task<IActionResult> Logout()
         {
@@ -337,8 +338,9 @@ namespace ASM2_KSTH.Controllers
             TempData["ok"] = "See You Again !";
             return Redirect("/");
         }
+        #endregion
 
-       
+        #region Dash board
         public async Task<IActionResult> Dashboard()
         {
 
@@ -351,5 +353,13 @@ namespace ASM2_KSTH.Controllers
             ViewBag.StudentName = studentName;
             return View();
         }
+        #endregion
+
+        #region FAQ
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+        #endregion
     }
 }

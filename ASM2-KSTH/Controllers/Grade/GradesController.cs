@@ -67,7 +67,7 @@ namespace ASM2_KSTH.Controllers.Grade
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
                     Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
-                    EnrollmentId = e.Id,
+                    EnrollmentId = e.EnrollmentId,
                     GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null
                 })
                 .ToListAsync();
@@ -92,8 +92,8 @@ namespace ASM2_KSTH.Controllers.Grade
                     ClassName = e.Class.ClassName,
                     MajorName = e.Student.Major.MajorName,
                     Grade1 = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().Grade1 : null,
-                    CourseId = e.Class.CourseId.HasValue ? e.Class.CourseId.Value : 0 ,
-                    EnrollmentId = e.Id,
+                    CourseId = e.Class.CourseId.HasValue ? e.Class.CourseId.Value : 0,
+                    EnrollmentId = e.EnrollmentId,
                     GradeId = e.Grades.FirstOrDefault() != null ? e.Grades.FirstOrDefault().GradeId : (int?)null 
                 })
                 .ToListAsync();
@@ -254,6 +254,19 @@ namespace ASM2_KSTH.Controllers.Grade
             return View(model);
         }
 
+     
+        public async Task<IActionResult> Delete(int id)
+        {
+            var grade = await _context.Grades.FindAsync(id);
+            if (grade == null)
+            {
+                return NotFound();
+            }
+
+            return View(grade);
+        }
+
+       
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -261,12 +274,13 @@ namespace ASM2_KSTH.Controllers.Grade
             var grade = await _context.Grades.FindAsync(id);
             if (grade != null)
             {
+                TempData["ok"] = "Delete Grade Successfull !";
                 _context.Grades.Remove(grade);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
-
 
     }
 

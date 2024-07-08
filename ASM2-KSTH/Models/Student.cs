@@ -25,10 +25,12 @@ public partial class Student
     [MinLength(5, ErrorMessage = "Username must be at least 6 characters")]
     public string Username { get; set; }
 
+
     [Display(Name = "Password")]
     [Required(ErrorMessage = "Password is required")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
+
 
     [ForeignKey("Roles")]
     public int RoleId { get; set; }
@@ -36,4 +38,9 @@ public partial class Student
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     public virtual ICollection<Attendance> Attendance { get; set; } = new List<Attendance>();
 
+       
+	
 }
+
+
+

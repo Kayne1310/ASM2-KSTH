@@ -9,8 +9,8 @@
 
 
 <p class="fw-bold fs-5" style="margin-bottom:15px">Select Courses</p>
-
-@using (Html.BeginForm("Index", "Diemdanh", FormMethod.Post))
+<div class="col-md-6">
+@using (Html.BeginForm("Index", "Attendances", FormMethod.Post))
 {
     <div class="form-group">
 
@@ -40,19 +40,23 @@
 
 }
 
+</div>
 @if (ViewData.ContainsKey("Classes"))
 {
     var classes = (SelectList)ViewData["Classes"];
+    <div class="col-md-6">
+
     <p class="fw-bold fs-5" style="margin-bottom:15px;margin-top:15px">Select Classes</p>
 
-    @using (Html.BeginForm("Diemdanh", "Diemdanh", FormMethod.Post))
+    @using (Html.BeginForm("Attendance", "Attendances", FormMethod.Post))
     {
         <div class="form-group">
 
-            @Html.DropDownList("classId", classes, "Choose Class", new { @class = "form-control" })
+            @Html.DropDownList("classId", classes, "Choose Class", new { @class = "form-select" })
         </div>
         <button type="submit" class="btn btn-primary" style="margin-top:15px">Submit</button>
     }
+    </div>
 }
 
 

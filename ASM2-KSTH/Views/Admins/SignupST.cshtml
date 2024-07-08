@@ -30,9 +30,9 @@
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-5 mx-auto">
                 <div class="card rounded-4">
                     <div class="card-body p-5">
-                        <div class="justify-content-center"  style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                        <div class="justify-content-center" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
                         <img src="~/assets/images/logoksth.jpg" class="mb-4" width="145" alt="">
-                        <h4 class="fw-bold" style="font-size:2rem;">Register for Student</h4>
+                        <h4 class="fw-bold">Register for Student</h4>
                         <p class="mb-0">Enter your credentials to create your account</p>
                         </div>
                         <div class="form-body my-4">
@@ -42,31 +42,31 @@
                                 <div class="col-12">
                                     <label asp-for="Name" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Name" class="form-control">
+                                    <input asp-for="Name" class="form-control" required>
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="DateOfBirth" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="DateOfBirth" class="form-control">
+                                    <input asp-for="DateOfBirth" class="form-control" required>
                                     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Address" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Address" class="form-control">
+                                    <input asp-for="Address" class="form-control" required>
                                     <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="PhoneNumber" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="PhoneNumber" class="form-control">
+                                    <input asp-for="PhoneNumber" class="form-control" required>
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Email" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Email" class="form-control">
+                                    <input asp-for="Email" class="form-control" required>
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
 
@@ -79,23 +79,23 @@
                                             {
                                                 <option value="@major.MajorName">@major.MajorName</option>
                                             }
-                                        }                                     
+                                        }
                                     </select>
                                 </div>
-                                <div class="col-12">                          
-                                        <input asp-for="RoleId" class="form-control" value="1" type="hidden">
+                                <div class="col-12">
+                                    <input asp-for="RoleId" class="form-control" value="1" type="hidden">
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Username" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Username" class="form-control">
+                                    <input asp-for="Username" class="form-control" required>
                                     <span asp-validation-for="Username" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Password" class="form-label"></label>
                                     <sup>*</sup>
                                     <div class="input-group" id="show_hide_password">
-                                        <input asp-for="Password" class="form-control">                                     
+                                        <input asp-for="Password" class="form-control" required>
                                     </div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>

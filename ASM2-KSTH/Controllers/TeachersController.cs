@@ -73,7 +73,7 @@ namespace ASM2_KSTH.Controllers
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
-                    TempData["ok"] = "Student registered successfully!";
+                    TempData["ok"] = "Teacher logged in successfully!";
 
 
                 if (Url.IsLocalUrl(ReturnUrl))
@@ -148,8 +148,10 @@ namespace ASM2_KSTH.Controllers
 			return RedirectToAction("DashBoard", "Teachers");
 		}
 
-		#endregion
-		public async Task<IActionResult> DashBoard()
+        #endregion
+
+        #region Dash board
+        public async Task<IActionResult> DashBoard()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var teacherId = int.Parse(userId);
@@ -160,6 +162,7 @@ namespace ASM2_KSTH.Controllers
             ViewBag.TeacherName = teachername;
             return View();
         }
+        #endregion
 
         #region Profile for Teacher
 
@@ -254,6 +257,7 @@ namespace ASM2_KSTH.Controllers
 
         #endregion
 
+        #region Logout
         [Authorize(Roles = "Teachers")]
         public async Task<IActionResult> Logout()
         {
@@ -262,8 +266,14 @@ namespace ASM2_KSTH.Controllers
             TempData["ok"] = "See you again !";
             return Redirect("/");
         }
+        #endregion
 
-      
+        #region FAQ
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+        #endregion
 
     }
 }

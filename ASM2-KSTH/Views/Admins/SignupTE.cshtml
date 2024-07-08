@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"]</title>
     <!--favicon-->
-    <link rel="icon" href="~/assets/images/logoksth.jpg type="image/png">
+    <link rel="icon" href="~/assets/images/logoksth.jpg" type="image/png">
 
     <!--plugins-->
     <link href="~/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
@@ -43,25 +43,25 @@
                                 <div class="col-12">
                                     <label asp-for="Name" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Name" class="form-control">
+                                    <input asp-for="Name" class="form-control" required>
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Address" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Address" class="form-control">
+                                    <input asp-for="Address" class="form-control" required>
                                     <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Email" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Email" class="form-control">
+                                    <input asp-for="Email" class="form-control" required>
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="PhoneNumber" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="PhoneNumber" class="form-control">
+                                    <input asp-for="PhoneNumber" class="form-control" required>
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
@@ -70,14 +70,14 @@
                                 <div class="col-12">
                                     <label asp-for="Username" class="form-label"></label>
                                     <sup>*</sup>
-                                    <input asp-for="Username" class="form-control">
+                                    <input asp-for="Username" class="form-control" required>
                                     <span asp-validation-for="Username" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="Password" class="form-label"></label>
                                     <sup>*</sup>
                                     <div class="input-group" id="show_hide_password">
-                                        <input asp-for="Password" class="form-control">
+                                        <input asp-for="Password" class="form-control" required>
                                     </div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>

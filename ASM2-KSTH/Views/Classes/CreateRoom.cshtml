@@ -4,19 +4,43 @@
     Layout = "~/Views/Shared/LayoutAdmin.cshtml";
 }
 
-<p class="fw-bold fs-5" style="margin-bottom:15px">List Information Classes</p>
-<form asp-action="CreateRoom" method="post">
-    <div class="form-group">
-        <label asp-for="RoomNumber" class="control-label" style="margin-bottom:15px"></label>
-        <input asp-for="RoomNumber" class="form-control" style="margin-bottom:15px" />
-        <span asp-validation-for="RoomNumber" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" style="margin-right:15px"/>
-        <a asp-action="ListRoom"><input type="Back" value="Back" class="btn btn-primary" style="width:72px;height:40px" /></a>
-    </div>
+<div class="card">
+    <div class="card-body">
+        <div id="stepper3" class="bs-stepper gap-4 vertical linear">
+            <div class="bs-stepper-header" role="tablist">
+                <div class="step" data-target="#test-vl-3">
+                    <div class="step-trigger" role="tab" id="stepper3trigger3" aria-controls="test-vl-3" aria-selected="false" disabled="disabled">
+                        <div class="bs-stepper-circle"><i class="material-icons-outlined">auto_stories</i></div>
+                        <div class="">
+                            <h5 class="mb-0 steper-title">Education</h5>
+                            <p class="mb-0 steper-sub-title">Education Class</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-</form>
+            <div class="bs-stepper-content">
+                <form asp-action="CreateRoom" method="post">
+                    <div id="test-vl-1" class="bs-stepper-pane content fade active dstepper-block" aria-labelledby="stepper3trigger1">
+                        <h5 class="mb-1">Create Room</h5>
+                        <p class="mb-4">KSTH University</p>
+                        <div class="row g-3">
+                            <div class="col-12 col-lg-6">
+                                <label asp-for="RoomNumber" class="control-label" style="margin-bottom:15px"></label>
+                                <input asp-for="RoomNumber" class="form-control" style="margin-bottom:15px" />
+                                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" value="Create" class="btn btn-primary px-4"><i class="bx bx-left-arrow-alt me-2"></i>Create</button>
+                                <a asp-action="ListRoom" class="btn btn-success px-4">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     

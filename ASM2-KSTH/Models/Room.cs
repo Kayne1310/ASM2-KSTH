@@ -14,5 +14,5 @@ public partial class Room
 
     public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
 
-    public virtual ICollection<Schedule1> Schedule1s { get; set; } = new List<Schedule1>();
+
 }

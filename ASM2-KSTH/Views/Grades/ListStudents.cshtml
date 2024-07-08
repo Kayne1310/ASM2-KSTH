@@ -37,6 +37,7 @@
                             <td>@student.MajorName</td>
                             <td>@student.Grade1</td>
                            
+                           
 
                             <td>
                                 @if (student.Grade1 != null)
@@ -44,7 +45,7 @@
                                     <a asp-action="Edit" asp-route-id="@student.GradeId" asp-route-classId="@ViewData["ClassId"]"  type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2 me-2" style="display:inline !important">
                                         <i class="material-icons-outlined">cloud_upload</i> Edit
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@student.StudentId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
+                                    <a asp-action="Delete" asp-route-id="@student.GradeId" asp-route-classId="@ViewData["ClassId"]" type="button" id="kayne" class="btn btn-outline-dark px-4 d-flex gap-2" style="display:inline !important">
                                         <i class="material-icons-outlined">delete</i> Delete
                                     </a>
                                 }

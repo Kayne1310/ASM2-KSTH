@@ -35,7 +35,6 @@ public partial class KsthContext : DbContext
 
     public virtual DbSet<Room> Rooms { get; set; }
 
-    public virtual DbSet<Schedule1> Schedule1s { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
@@ -138,9 +137,9 @@ public partial class KsthContext : DbContext
 
         modelBuilder.Entity<Enrollment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Enrollme__3214EC07F1363D14");
+            entity.HasKey(e => e.EnrollmentId).HasName("PK__Enrollme__3214EC07F1363D14");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.EnrollmentId).ValueGeneratedNever();
 
             entity.HasOne(d => d.Class).WithMany(p => p.Enrollments)
                 .HasForeignKey(d => d.ClassId)
@@ -193,37 +192,6 @@ public partial class KsthContext : DbContext
             entity.Property(e => e.RoleName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-        });
-
-        modelBuilder.Entity<Schedule1>(entity =>
-        {
-            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B695382D34E");
-
-            entity.ToTable("Schedule_1");
-
-            entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
-            entity.Property(e => e.ClassId).HasColumnName("ClassID");
-            entity.Property(e => e.CourseId).HasColumnName("CourseID");
-            entity.Property(e => e.RoomId).HasColumnName("RoomID");
-            entity.Property(e => e.StudentId).HasColumnName("StudentID");
-
-            entity.HasOne(d => d.Class)
-                  .WithMany(p => p.Schedule1s)
-                  .HasForeignKey(d => d.ClassId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__Schedule___Class__10566F31");
-
-            entity.HasOne(d => d.Course)
-                  .WithMany(p => p.Schedule1s)
-                  .HasForeignKey(d => d.CourseId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__Schedule___Cours__123EB7A3");
-
-            entity.HasOne(d => d.Room)
-                  .WithMany(p => p.Schedule1s)
-                  .HasForeignKey(d => d.RoomId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__Schedule___RoomI__114A936A");
         });
 
         modelBuilder.Entity<Student>(entity =>

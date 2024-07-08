@@ -383,5 +383,31 @@ namespace ASM2_KSTH.Controllers
             return _context.Classes.Any(e => e.ClassId == id);
         }
 
+        public async Task<IActionResult> DetailST(int classId)
+        {
+            var classEntity = await _context.Classes
+                .Include(c => c.Enrollments)
+                .ThenInclude(e => e.Student)
+                .FirstOrDefaultAsync(c => c.ClassId == classId);
+
+            if (classEntity == null)
+            {
+                return NotFound();
+            }
+
+            var students = classEntity.Enrollments
+                .Where(e => e.Student != null)
+                .Select(e => new StudentViewModel
+                {
+                    StudentId = e.Student.StudentId,
+                    Name = e.Student.Name,
+                    Username = e.Student.Username,
+                    Email = e.Student.Email
+                }).ToList();
+
+            return View(students);
+        }
+
+
     }
 }

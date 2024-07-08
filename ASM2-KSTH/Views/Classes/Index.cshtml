@@ -5,7 +5,7 @@
 }
 
 <p class="fw-bold fs-5" style="margin-bottom:15px">List Information Classes</p>
-
+<hr />
 <div class="card-body">
     <div class="row row-cols-auto g-3">
         <div class="col">
@@ -46,7 +46,7 @@
                             <td>@item.Year</td>
                             <td>@item.Room</td>
                             <td>@item.Teacher</td>
-                            <td>@item.StudentCount</td>
+                            <td><a asp-action="DetailST" asp-route-classId="@item.ClassId">@item.StudentCount</a></td>
                             <td>@item.CourseName</td>
                            
                             <td>
@@ -60,9 +60,7 @@
                     }
                 </tbody>
             </table>
-            <p>
-                <a asp-controller="Admins" asp-action="DashBoard">Back </a>
-            </p>
+
         </div>
     </div>
 </div>
@@ -82,7 +80,11 @@
 }
 
 
-
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
 
 
 
