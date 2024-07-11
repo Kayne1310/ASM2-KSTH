@@ -28,18 +28,20 @@ namespace ASM2_KSTH.Controllers
         #region Login for Student
         // GET: Students
         [HttpGet]
-        public IActionResult Index(string? ReturnUrl)
+        public IActionResult Index()
         {
-            ViewBag.ReturnUrl = ReturnUrl;
-            ViewData["ReturnUrl"] = ReturnUrl;
+   
             return View();
         }
 
         // POST: Students
         [HttpPost]
-        public async Task<IActionResult> Index(Student model, string? ReturnUrl)
+        public async Task<IActionResult> Index(Student model)
         {
-                ViewBag.ReturnUrl = ReturnUrl;
+            if(ModelState.IsValid)
+            {
+
+                
                 // Thực hiện xác thực thông tin đăng nhập tại đây
                 var student =  _context.Students.SingleOrDefault(u => u.Username == model.Username);
                 if (student == null || student.Password != model.Password.ToMd5Hash(student.RandomKey))
@@ -62,23 +64,16 @@ namespace ASM2_KSTH.Controllers
                         new Claim("Email", student.Email ?? string.Empty),
 
                     };
-                    Console.WriteLine(student);
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
-                     TempData["ok"] = "Student registered successfully!";
+               
 
-                if (Url.IsLocalUrl(ReturnUrl))
-                    {
-                        return Redirect(ReturnUrl);
-                    }
-                    else
-                    {
+                    return RedirectToAction("DashBoard", "Students");
 
-                        return RedirectToAction("DashBoard", "Students");
-                    }
                 }
+            }
             return View();
         }
 		#endregion
@@ -341,6 +336,8 @@ namespace ASM2_KSTH.Controllers
         #endregion
 
         #region Dash board
+        [HttpGet]
+        [Authorize(Roles = "Students")]
         public async Task<IActionResult> Dashboard()
         {
 

@@ -27,24 +27,17 @@ namespace ASM2_KSTH.Controllers
         #region Login for Teacher
         // GET: Teachers
         [HttpGet]
-        public IActionResult Index(string? ReturnUrl)
+        public IActionResult Index()
         {
-            ViewBag.ReturnUrl = ReturnUrl;
-            ViewData["ReturnUrl"] = ReturnUrl;
+
             return View();
         }
 
 
         // POST: Teachers
         [HttpPost]
-        public async Task<IActionResult> Index(Teacher model, string? ReturnUrl)
+        public async Task<IActionResult> Index(Teacher model)
         {
-
-            ViewBag.ReturnUrl = ReturnUrl;
-
-    
-                // Thực hiện xác thực thông tin đăng nhập tại đây
-
 
                 // Thực hiện xác thực thông tin đăng nhập tại đây
                 var teacher = _context.Teachers.SingleOrDefault(u => u.Username == model.Username);
@@ -75,17 +68,7 @@ namespace ASM2_KSTH.Controllers
                     await HttpContext.SignInAsync(claimsPrincipal);
                     TempData["ok"] = "Teacher logged in successfully!";
 
-
-                if (Url.IsLocalUrl(ReturnUrl))
-                    {
-                        return Redirect(ReturnUrl);
-                    }
-                    else
-                    {
-
                         return RedirectToAction("DashBoard", "Teachers");
-
-                    }
 
                 }
                 return View();
