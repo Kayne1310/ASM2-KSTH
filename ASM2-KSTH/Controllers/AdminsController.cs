@@ -24,6 +24,8 @@ namespace ASM2_KSTH.Controllers
         private readonly ASM2_KSTHContext _context;
         private readonly IMapper _mapper;
 
+        public ASM2_KSTHContext Context { get; }
+
         public AdminsController(ASM2_KSTHContext context, IMapper mapper)
         {
             _context = context;
@@ -31,14 +33,8 @@ namespace ASM2_KSTH.Controllers
         }
 
         #region Login for Admin
-       
-        // GET: Admins
-        [HttpGet]
-        public IActionResult Index(string? ReturnUrl)
-        {
-            ViewData["ReturnUrl"] = ReturnUrl;
-            return View();
-        }
+
+
 
         [Authorize(Roles = "Admins")]
         public IActionResult AdminPage()
@@ -64,13 +60,19 @@ namespace ASM2_KSTH.Controllers
         }
 
 
-
+        // GET: Admins
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
         // POST: Admins
         [HttpPost]
-        public async Task<IActionResult> Index(Admin model, string? ReturnUrl)
+        public async Task<IActionResult> Index(Admin model)
         {
-     
-                ViewBag.ReturnUrl = ReturnUrl;
+            if(ModelState.IsValid)
+            {
+
                 // Thực hiện xác thực thông tin đăng nhập tại đây
                 var admin = await _context.Admins.FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password); 
                 
@@ -87,138 +89,133 @@ namespace ASM2_KSTH.Controllers
                     var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == admin.RoleId);
                     var claims = new List<Claim>
                     {
+                        new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
                         new Claim(ClaimTypes.Role, "Admins"),
-                        new Claim(MySetting.CLAIM_ID, admin.Username),
 
                     };
-              
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(claimsPrincipal);
-                TempData["ok"] = "Welcome Back Admin!";
+                    TempData["ok"] = "Welcome Back Admin!";
 
-                if (Url.IsLocalUrl(ReturnUrl))
-                    {
-                        return Redirect(ReturnUrl);
-                    }
-                    else
-                    {
                         return RedirectToAction("DashBoard", "Admins");
-                    }
                 }
-                return View();
+
+            }
+            return View();
         }
         #endregion
 
         #region Register for Student
         [Authorize(Roles = "Admins")]
         [HttpGet]
-        public IActionResult SignupST(string? ReturnUrl)
+        public IActionResult SignupST()
         {
-            ViewBag.ReturnUrl = ReturnUrl;
             ViewBag.Majors = _context.Majors.ToList();
             return View();
         }
 
         [HttpPost]
-        public IActionResult SignupST(StudentRegister model, string? ReturnUrl)
+        public IActionResult SignupST(StudentRegister model)
         {
-            try
+            ViewBag.Majors = _context.Majors.ToList();
+            if (ModelState.IsValid)
             {
-                ViewBag.ReturnUrl = ReturnUrl;
-                ViewBag.Majors = _context.Majors.ToList();
-                var existingStudent = _context.Students.FirstOrDefault(t => t.Username == model.Username);
-                if (existingStudent != null)
+                try
                 {
-                    // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
-                    ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
-                    TempData["no"]="Username already exists. Please choose a different username.";
-                   
-                    return View();
+
+
+                    var existingStudent = _context.Students.FirstOrDefault(t => t.Username == model.Username);
+                    if (existingStudent != null)
+                    {
+                        ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                        TempData["no"] = "Username already exists. Please choose a different username.";
+                        return View();
+                    }
+
+                    var major = _context.Majors.FirstOrDefault(m => m.MajorName == model.MajorName);
+                    if (major == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var student = _mapper.Map<Student>(model);
+                    student.RandomKey = MyUtil.GenerateRandomKey();
+                    student.Password = model.Password.ToMd5Hash(student.RandomKey);
+                    student.RoleId = model.RoleId;
+                    student.MajorId = major.MajorId;
+
+                    _context.Students.Add(student);
+                    _context.SaveChanges();
+                    TempData["ok"] = "Create Student Successful!";
+                    return RedirectToAction("AdminPage", "Admins");
                 }
-                // Truy vấn cơ sở dữ liệu để lấy MajorId dựa trên MajorName
-                var major = _context.Majors.FirstOrDefault(m => m.MajorName == model.MajorName);
-                if (major == null)
+                catch (Exception ex)
                 {
-                    // Xử lý trường hợp không tìm thấy MajorName
-                    return NotFound();
+                    var mess = $"{ex.Message} shh";
+                    // Log the error (uncomment ex variable name and write a log.)
                 }
-
-                // Map dữ liệu từ model sang đối tượng Student
-                var student = _mapper.Map<Student>(model);
-                student.RandomKey = MyUtil.GenerateRandomKey();
-                student.Password = model.Password.ToMd5Hash(student.RandomKey);
-                student.RoleId = model.RoleId;
-                student.MajorId = major.MajorId;
-
-                // Thêm sinh viên mới vào cơ sở dữ liệu
-                _context.Students.Add(student);
-                _context.SaveChanges();
-                TempData["ok"] = "Create Student Successful!";
-                return RedirectToAction("AdminPage", "Admins");
-            }
-
-            catch (Exception ex)
-            {
-                var mess = $"{ex.Message} shh";
-                // Có thể thêm logging hoặc xử lý lỗi khác ở đây
             }
             return View();
         }
+
         #endregion
 
         #region Register for Teacher
         [Authorize(Roles = "Admins")]
-		[HttpGet]
-        public IActionResult SignupTE(string? ReturnUrl)
+        [HttpGet]
+        public IActionResult SignupTE()
         {
-            ViewBag.ReturnUrl = ReturnUrl;
             //ViewBag.Teachers = _context.Teachers.ToList();
             return View();
         }
 
 
         [HttpPost]
-        public IActionResult SignupTE(Teacher model, string? ReturnUrl)
+        public IActionResult SignupTE(Teacher model, object value)
         {
-            try
+            if (ModelState.IsValid)
             {
-                ViewBag.ReturnUrl = ReturnUrl;
-                var existingTeacher = _context.Teachers.FirstOrDefault(t => t.Username == model.Username);
-                if (existingTeacher != null)
+
+                try
                 {
-                    // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
-                    ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
-                    TempData["no"] = "Username already exists. Please choose a different username.";
-                    return View();
+                    var existingTeacher = _context.Teachers.FirstOrDefault(t => t.Username == model.Username);
+                    if (existingTeacher != null)
+                    {
+                        // Nếu username đã tồn tại, hiển thị thông báo lỗi và trả về View
+                        ViewBag.ErrorMessage = "Username already exists. Please choose a different username.";
+                        TempData["no"] = "Username already exists. Please choose a different username.";
+                        return View();
+                    }
+                    var teacher = new Teacher
+                    {
+                        Name = model.Name,  // Example property
+                        Address = model.Address,
+                        Email = model.Email,
+                        PhoneNumber = model.PhoneNumber,
+                        RandomKey = model.RandomKey,
+                        Username = model.Username,
+                        Password = model.Password,
+                        RoleId = model.RoleId,
+
+                    };
+                    teacher.RandomKey = MyUtil.GenerateRandomKey();
+                    teacher.Password = model.Password.ToMd5Hash(teacher.RandomKey);
+
+                    // Thêm giáo viên mới vào cơ sở dữ liệu
+                    _context.Teachers.Add(teacher);
+                    _context.SaveChanges();
+                    TempData["ok"] = "Create Teacher Successfull!";
+                    return RedirectToAction("AdminPage", "Admins");
                 }
-                var teacher = new Teacher
-                {             
-                    Name = model.Name,  // Example property
-                    Address = model.Address,
-                    Email = model.Email,
-                    PhoneNumber = model.PhoneNumber,
-                    RandomKey = model.RandomKey, 
-                    Username = model.Username,
-                    Password = model.Password,
-                    RoleId = model.RoleId,
 
-                };
-                teacher.RandomKey = MyUtil.GenerateRandomKey();
-                teacher.Password = model.Password.ToMd5Hash(teacher.RandomKey);
+                catch (Exception ex)
+                {
+                    var mess = $"{ex.Message} shh";
+                    // Có thể thêm logging hoặc xử lý lỗi khác ở đây
+                }
 
-                // Thêm giáo viên mới vào cơ sở dữ liệu
-                _context.Teachers.Add(teacher);
-                _context.SaveChanges();
-                TempData["ok"] = "Create Teacher Successfull!";
-                return RedirectToAction("AdminPage", "Admins");
-            }
-
-            catch (Exception ex)
-            {
-                var mess = $"{ex.Message} shh";
-                // Có thể thêm logging hoặc xử lý lỗi khác ở đây
             }
             return View();
         }

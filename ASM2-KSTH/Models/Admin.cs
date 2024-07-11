@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASM2_KSTH.Models
 {
     public class Admin
     {
+        [Key]
         public int Id { get; set; }
 
         [Display(Name = "Username")]
@@ -19,6 +21,7 @@ namespace ASM2_KSTH.Models
 
 
         [ForeignKey("Roles")]
+ 
         public int RoleId { get; set; }
         public virtual Roles? Roles { get; set; }
     }
