@@ -1,4 +1,14 @@
 # ASM2-KSTH
+INSTALL PROJECT
+Step 1:Git Clone or Dowload File Zip
+Step 2:In Folder SQL:use Script sql to Create DB </br>
+Step:3: in file appsettings.js changeConnectionStrings to Connect DB</br>
+Step 4:launch the program
+
+![image](https://github.com/user-attachments/assets/46c9db8f-fb2d-49b2-9d54-67dd59e069a3)
+Admin
+usernam :admin  
+password:123456
 
 KSTH Management Student </br>
 Role:</br>
