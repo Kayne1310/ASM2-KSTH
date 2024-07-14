@@ -1,6 +1,6 @@
 # ASM2-KSTH
-INSTALL PROJECT
-Step 1:Git Clone or Dowload File Zip
+INSTALL PROJECT </br>
+Step 1:Git Clone or Dowload File Zip</br>
 Step 2:In Folder SQL:use Script sql to Create DB </br>
 Step:3: in file appsettings.js changeConnectionStrings to Connect DB</br>
 Step 4:launch the program
