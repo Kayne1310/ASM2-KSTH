@@ -8,15 +8,15 @@ Step 4:launch the program
 ![image](https://github.com/user-attachments/assets/46c9db8f-fb2d-49b2-9d54-67dd59e069a3)
 Admin
 usernam :admin  
-password:123456
+password:123456 </br>
 
-Student
-username:student1
-password:123456
+Student </br>
+username:student1 </br>
+password:123456 </br>
 
-Teacher
-username:teacher4 
-password:123456
+Teacher </br> 
+username:teacher4  </br>
+password:123456 </br>
 
 KSTH Management Student </br>
 Role:</br>
