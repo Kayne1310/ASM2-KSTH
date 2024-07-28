@@ -10,6 +10,14 @@ Admin
 usernam :admin  
 password:123456
 
+Student
+username:student1
+password:123456
+
+Teacher
+username:teacher4 
+password:123456
+
 KSTH Management Student </br>
 Role:</br>
 + Admin
