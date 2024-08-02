@@ -333,8 +333,8 @@ namespace ASM2_KSTH.Controllers
         public async Task<IActionResult> ViewScheduleST(int page = 1)
         {
             const int DaysPerPage = 7;
-            var today = DateTime.Today;
-            var startDate = today.AddDays((page - 1) * DaysPerPage);
+			var today = DateTime.Parse("2024/07/12");
+			var startDate = today.AddDays((page - 1) * DaysPerPage);
             var daysOfWeek = Enumerable.Range(0, DaysPerPage)
                 .Select(i => startDate.AddDays(i))
                 .ToArray();
@@ -389,8 +389,8 @@ namespace ASM2_KSTH.Controllers
         public async Task<IActionResult> ViewScheduleTE(int page = 1)
         {
             const int DaysPerPage = 7;
-            var today = DateTime.Today;
-            var startDate = today.AddDays((page - 1) * DaysPerPage);
+			var today = DateTime.Parse("2024/07/12");
+			var startDate = today.AddDays((page - 1) * DaysPerPage);
             var daysOfWeek = Enumerable.Range(0, DaysPerPage)
                 .Select(i => startDate.AddDays(i))
                 .ToArray();
